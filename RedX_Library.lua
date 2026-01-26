@@ -240,8 +240,8 @@ function RedX.new(title)
     header.TextXAlignment = Enum.TextXAlignment.Left
 
     local rightButtons = Instance.new("Frame", headerBar)
-    rightButtons.Size = UDim2.new(1,-20,1,0)
-    rightButtons.Position = UDim2.new(0,0,0,0)
+    rightButtons.Size = UDim2.new(0,220,1,0)
+    rightButtons.Position = UDim2.new(1,-220,0,0)
     rightButtons.BackgroundTransparency = 1
     
     local pad = Instance.new("UIPadding", rightButtons)
