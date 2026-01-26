@@ -41,7 +41,7 @@ function RedX.new(title)
     corner(main,14)
 
     local sidebar = Instance.new("Frame", main)
-    sidebar.Size = UDim2.new(0,190,1,0)
+    sidebar.Size = UDim2.new(0,200,1,0)
     sidebar.BackgroundColor3 = theme.panel
     corner(sidebar,14)
 
@@ -54,35 +54,45 @@ function RedX.new(title)
     header.TextSize = 20
     header.TextColor3 = theme.text
     header.BackgroundTransparency = 1
-    header.Position = UDim2.new(0,210,0,15)
-    header.Size = UDim2.new(1,-220,0,30)
+    header.Position = UDim2.new(0,220,0,15)
+    header.Size = UDim2.new(1,-230,0,30)
     header.TextXAlignment = Enum.TextXAlignment.Left
-
-    local pages = Instance.new("Folder", main)
 
     self.Main = main
     self.Sidebar = sidebar
-    self.Pages = pages
+    self.Pages = {}
     self.CurrentPage = nil
 
     return self
 end
 
-function RedX:CreatePage(name)
+function RedX:CreatePage(name, iconUrl)
     local btn = Instance.new("TextButton", self.Sidebar)
-    btn.Size = UDim2.new(1,-12,0,36)
+    btn.Size = UDim2.new(1,-12,0,40)
     btn.Position = UDim2.new(0,6,0,0)
     btn.BackgroundColor3 = Color3.fromRGB(28,28,28)
-    btn.Text = "   "..name
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 13
-    btn.TextColor3 = theme.sub
-    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.Text = ""
     corner(btn,8)
 
+    local icon = Instance.new("ImageLabel", btn)
+    icon.Size = UDim2.new(0,22,0,22)
+    icon.Position = UDim2.new(0,10,0.5,-11)
+    icon.BackgroundTransparency = 1
+    icon.Image = iconUrl or ""
+
+    local txt = Instance.new("TextLabel", btn)
+    txt.Text = name
+    txt.Font = Enum.Font.Gotham
+    txt.TextSize = 13
+    txt.TextColor3 = theme.sub
+    txt.BackgroundTransparency = 1
+    txt.Position = UDim2.new(0,40,0,0)
+    txt.Size = UDim2.new(1,-45,1,0)
+    txt.TextXAlignment = Enum.TextXAlignment.Left
+
     local page = Instance.new("ScrollingFrame", self.Main)
-    page.Position = UDim2.new(0,210,0,60)
-    page.Size = UDim2.new(1,-220,1,-70)
+    page.Position = UDim2.new(0,220,0,60)
+    page.Size = UDim2.new(1,-230,1,-70)
     page.CanvasSize = UDim2.new(0,0,0,0)
     page.ScrollBarThickness = 4
     page.Visible = false
@@ -96,15 +106,14 @@ function RedX:CreatePage(name)
     end)
 
     btn.MouseButton1Click:Connect(function()
-        for _,p in pairs(self.Main:GetChildren()) do
-            if p:IsA("ScrollingFrame") then
-                p.Visible = false
-            end
+        for _,p in pairs(self.Pages) do
+            p.Visible = false
         end
         page.Visible = true
         self.CurrentPage = page
     end)
 
+    table.insert(self.Pages,page)
     return page
 end
 
