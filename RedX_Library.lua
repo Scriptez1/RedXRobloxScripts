@@ -11,7 +11,7 @@ local theme = {
     text = Color3.fromRGB(235,235,235),
     sub = Color3.fromRGB(160,160,160),
     accent = Color3.fromRGB(220,20,60),
-    bgTransparency = 0.8,
+    bgTransparency = 1,
     panelTransparency = 0.2
 }
 
