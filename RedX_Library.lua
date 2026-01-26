@@ -590,7 +590,7 @@ end
 
 local ui = RedX.new("RedX Hub : Blox Fruits")
 
-local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://6031071053")
+local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://5252447904")
 local mainMenuSec = ui:Section(mainMenu, "Main Menu")
 
 local farm = ui:CreatePage("Farm", "rbxassetid://6031280882")
@@ -622,7 +622,6 @@ local shopSec = ui:Section(shop, "Shop")
 
 local misc = ui:CreatePage("Misc", "rbxassetid://6031327770")
 local miscSec = ui:Section(misc, "Misc")
-
 
 ui:Toggle(miscSec, "No Clip", function(v)
     if v then
