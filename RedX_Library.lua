@@ -364,12 +364,16 @@ function RedX:CreatePage(name, iconUrl)
 
     addHover(btn, Color3.fromRGB(32,32,32), Color3.fromRGB(38,38,38))
 
-    local icon = Instance.new("ImageLabel", btn)
-    icon.Size = UDim2.new(0,22,0,22)
-    icon.Position = UDim2.new(0,10,0.5,-11)
-    icon.BackgroundTransparency = 1
-    icon.Image = iconUrl or ""
-    icon.ZIndex = 5
+    local icon
+    if iconUrl and iconUrl ~= "" then
+        icon = Instance.new("ImageLabel", btn)
+        icon.Size = UDim2.new(0,22,0,22)
+        icon.Position = UDim2.new(0,10,0.5,-11)
+        icon.BackgroundTransparency = 1
+        icon.Image = iconUrl
+        icon.ZIndex = 5
+    end
+
 
     local txt = Instance.new("TextLabel", btn)
     txt.Text = name
