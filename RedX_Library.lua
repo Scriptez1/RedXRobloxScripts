@@ -115,7 +115,7 @@ function RedX.new(title)
     main.BorderSizePixel = 0
     main.ClipsDescendants = false
     main.Active = false
-    main.BackgroundTransparency = theme.bgTransparency
+    -- main.BackgroundTransparency = theme.bgTransparency
     corner(main,14)
 
     -- Sidebar
@@ -126,7 +126,7 @@ function RedX.new(title)
     sidebar.BorderSizePixel = 0
     sidebar.ZIndex = 2
     sidebar.ClipsDescendants = false
-    sidebar.BackgroundTransparency = theme.bgTransparency
+    -- sidebar.BackgroundTransparency = theme.bgTransparency
     corner(sidebar,14)
 
     local sidebarMask = Instance.new("Frame", sidebar)
@@ -135,7 +135,7 @@ function RedX.new(title)
     sidebarMask.BackgroundColor3 = theme.panel
     sidebarMask.BorderSizePixel = 0
     sidebarMask.ZIndex = 2
-    sidebarMask.BackgroundTransparency = theme.bgTransparency
+    -- sidebarMask.BackgroundTransparency = theme.bgTransparency
 
     -- Sidebar logosu (Absolute position - UIListLayout etkilemeyecek)
     local logoFrame = Instance.new("Frame", sidebar)
@@ -143,7 +143,7 @@ function RedX.new(title)
     logoFrame.Position = UDim2.new(0,0,0,0)
     logoFrame.BackgroundTransparency = 1
     logoFrame.ZIndex = 5
-    logoFrame.BackgroundTransparency = theme.bgTransparency
+    -- logoFrame.BackgroundTransparency = theme.bgTransparency
 
     local logoText = Instance.new("TextLabel", logoFrame)
     logoText.Text = "RedX"
@@ -155,7 +155,7 @@ function RedX.new(title)
     logoText.TextXAlignment = Enum.TextXAlignment.Center
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
-    logoText.BackgroundTransparency = theme.bgTransparency
+    -- logoText.BackgroundTransparency = theme.bgTransparency
 
     -- ScrollingFrame için butonlar (Logo'nun altında)
     local buttonsScroll = Instance.new("ScrollingFrame", sidebar)
@@ -166,7 +166,7 @@ function RedX.new(title)
     buttonsScroll.ScrollBarThickness = 0
     buttonsScroll.CanvasSize = UDim2.new(0,0,0,0)
     buttonsScroll.ZIndex = 3
-    buttonsScroll.BackgroundTransparency = theme.bgTransparency
+    -- buttonsScroll.BackgroundTransparency = theme.bgTransparency
 
     local buttonsPadding = Instance.new("UIPadding", buttonsScroll)
     buttonsPadding.PaddingLeft = UDim.new(0,8)
@@ -192,7 +192,7 @@ function RedX.new(title)
     headerBar.ZIndex = 2
     headerBar.ClipsDescendants = true
     headerBar.Active = true
-    headerBar.BackgroundTransparency = theme.bgTransparency
+    -- headerBar.BackgroundTransparency = theme.bgTransparency
 
     local headerCorner = Instance.new("UICorner", headerBar)
     headerCorner.CornerRadius = UDim.new(0,14)
@@ -247,7 +247,7 @@ function RedX.new(title)
     header.Position = UDim2.new(0,20,0,0)
     header.Size = UDim2.new(1,-120,1,0)
     header.TextXAlignment = Enum.TextXAlignment.Left
-    header.BackgroundTransparency = theme.bgTransparency
+    -- header.BackgroundTransparency = theme.bgTransparency
 
     local rightButtons = Instance.new("Frame", headerBar)
     rightButtons.Size = UDim2.new(0,220,1,0)
