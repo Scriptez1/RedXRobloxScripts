@@ -245,7 +245,7 @@ function RedX.new(title)
     rightButtons.BackgroundTransparency = 1
     
     local pad = Instance.new("UIPadding", rightButtons)
-    pad.PaddingRight = UDim.new(0,50)
+    pad.PaddingRight = UDim.new(0,30)
 
     local rightLayout = Instance.new("UIListLayout", rightButtons)
     rightLayout.FillDirection = Enum.FillDirection.Horizontal
