@@ -254,7 +254,7 @@ function RedX.new(title)
     -- Close button
     local closeBtn = Instance.new("TextButton", headerBar)
     closeBtn.Size = UDim2.new(0,32,0,32)
-    closeBtn.Position = UDim2.new(1,-100,0.5,-16)
+    closeBtn.Position = UDim2.new(1,-90,0.5,-16)
     closeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     closeBtn.Text = "×"
     closeBtn.Font = Enum.Font.GothamBold
