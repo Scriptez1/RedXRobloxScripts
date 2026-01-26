@@ -613,7 +613,6 @@ local shopSec = ui:Section(shop, "Shop")
 local misc = ui:CreatePage("Misc", "rbxassetid://9405931596")
 local miscSec = ui:Section(misc, "Misc")
 
-
 ui:Toggle(miscSec, "No Clip", function(v)
     if v then
         _G.noClip = true
