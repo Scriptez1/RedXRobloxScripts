@@ -484,6 +484,66 @@ function RedX:Section(page, title)
     return holder
 end
 
+function RedX:Slider(parent, text, min, max, default, callback)
+    local row = Instance.new("Frame", parent)
+    row.Size = UDim2.new(1,0,0,46)
+    row.BackgroundTransparency = 1
+
+    local label = Instance.new("TextLabel", row)
+    label.Size = UDim2.new(1,0,0,18)
+    label.BackgroundTransparency = 1
+    label.Text = text .. " : " .. tostring(default)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextColor3 = theme.sub
+    label.TextXAlignment = Enum.TextXAlignment.Left
+
+    local bar = Instance.new("Frame", row)
+    bar.Position = UDim2.new(0,0,0,24)
+    bar.Size = UDim2.new(1,0,0,12)
+    bar.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    bar.BorderSizePixel = 0
+    corner(bar,6)
+
+    local fill = Instance.new("Frame", bar)
+    fill.Size = UDim2.new((default-min)/(max-min),0,1,0)
+    fill.BackgroundColor3 = theme.accent
+    fill.BorderSizePixel = 0
+    corner(fill,6)
+
+    local dragging = false
+
+    local function setValueFromX(x)
+        local percent = math.clamp((x - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
+        fill.Size = UDim2.new(percent,0,1,0)
+        local value = math.floor(min + (max-min)*percent)
+        label.Text = text .. " : " .. tostring(value)
+        if callback then
+            callback(value)
+        end
+    end
+
+    bar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            setValueFromX(input.Position.X)
+        end
+    end)
+
+    bar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            setValueFromX(input.Position.X)
+        end
+    end)
+end
+
+
 function RedX:Toggle(parent, text, callback)
     local row = Instance.new("Frame", parent)
     row.Size = UDim2.new(1,0,0,32)
