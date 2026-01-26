@@ -10,9 +10,7 @@ local theme = {
     stroke = Color3.fromRGB(55,55,55),
     text = Color3.fromRGB(235,235,235),
     sub = Color3.fromRGB(160,160,160),
-    accent = Color3.fromRGB(220,20,60),
-    bgTransparency = 1,
-    panelTransparency = 1
+    accent = Color3.fromRGB(220,20,60)
 }
 
 local function corner(o,r)
