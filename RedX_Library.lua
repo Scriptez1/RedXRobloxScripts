@@ -67,22 +67,34 @@ function RedX.new(title)
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0,200,1,0)
     sidebar.BackgroundColor3 = theme.panel
+    sidebar.BorderSizePixel = 0
     corner(sidebar,14)
 
+    -- Sidebar için padding
+    local sidebarPadding = Instance.new("UIPadding", sidebar)
+    sidebarPadding.PaddingTop = UDim.new(0,60)
+    sidebarPadding.PaddingLeft = UDim.new(0,6)
+    sidebarPadding.PaddingRight = UDim.new(0,6)
+    sidebarPadding.PaddingBottom = UDim.new(0,6)
+
     local sidebarLayout = Instance.new("UIListLayout", sidebar)
-    sidebarLayout.Padding = UDim.new(0,6)
+    sidebarLayout.Padding = UDim.new(0,8)
     sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     -- Header bar (üst kısım)
     local headerBar = Instance.new("Frame", main)
     headerBar.Size = UDim2.new(1,-200,0,50)
     headerBar.Position = UDim2.new(0,200,0,0)
-    headerBar.BackgroundColor3 = theme.panel
+    headerBar.BackgroundColor3 = theme.bg
     headerBar.BorderSizePixel = 0
     headerBar.ZIndex = 2
 
-    local headerCorner = Instance.new("UICorner", headerBar)
-    headerCorner.CornerRadius = UDim.new(0,14)
+    -- Alt çizgi
+    local headerLine = Instance.new("Frame", headerBar)
+    headerLine.Size = UDim2.new(1,0,0,1)
+    headerLine.Position = UDim2.new(0,0,1,0)
+    headerLine.BackgroundColor3 = theme.stroke
+    headerLine.BorderSizePixel = 0
 
     local header = Instance.new("TextLabel", headerBar)
     header.Text = title
@@ -138,6 +150,23 @@ function RedX.new(title)
         gui:Destroy()
     end)
 
+    -- Sidebar logosunu ekle (üst kısım)
+    local logoFrame = Instance.new("Frame", sidebar)
+    logoFrame.Size = UDim2.new(1,0,0,50)
+    logoFrame.Position = UDim2.new(0,0,0,0)
+    logoFrame.BackgroundTransparency = 1
+    logoFrame.ZIndex = 3
+    logoFrame.LayoutOrder = -1
+
+    local logoText = Instance.new("TextLabel", logoFrame)
+    logoText.Text = "RedX"
+    logoText.Font = Enum.Font.GothamBold
+    logoText.TextSize = 18
+    logoText.TextColor3 = theme.accent
+    logoText.BackgroundTransparency = 1
+    logoText.Size = UDim2.new(1,0,1,0)
+    logoText.TextXAlignment = Enum.TextXAlignment.Center
+
     self.Main = main
     self.Sidebar = sidebar
     self.HeaderBar = headerBar
@@ -149,10 +178,10 @@ end
 
 function RedX:CreatePage(name, iconUrl)
     local btn = Instance.new("TextButton", self.Sidebar)
-    btn.Size = UDim2.new(1,-12,0,40)
-    btn.Position = UDim2.new(0,6,0,0)
+    btn.Size = UDim2.new(1,0,0,40)
     btn.BackgroundColor3 = Color3.fromRGB(28,28,28)
     btn.Text = ""
+    btn.BorderSizePixel = 0
     corner(btn,8)
 
     -- Hover efekti
