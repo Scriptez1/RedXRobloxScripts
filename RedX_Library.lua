@@ -590,28 +590,39 @@ end
 
 local ui = RedX.new("RedX Hub : Blox Fruits")
 
-local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://13060262582")
+local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://6031071053")
 local mainMenuSec = ui:Section(mainMenu, "Main Menu")
-local farm = ui:CreatePage("Farm", "rbxassetid://7733986726")
+
+local farm = ui:CreatePage("Farm", "rbxassetid://6031280882")
 local farmSec = ui:Section(farm, "Farm")
-local quests = ui:CreatePage("Quests/Items", "rbxassetid://7485051733")
+
+local quests = ui:CreatePage("Quests/Items", "rbxassetid://6031763426")
 local questsSec = ui:Section(quests, "Quests/Items")
-local fruit = ui:CreatePage("Fruit", "rbxassetid://13492316294")
+
+local fruit = ui:CreatePage("Fruit", "rbxassetid://6031094678")
 local fruitSec = ui:Section(fruit, "Fruit")
-local raid = ui:CreatePage("Raid", "rbxassetid://3079644018")
+
+local raid = ui:CreatePage("Raid", "rbxassetid://6031233858")
 local raidSec = ui:Section(raid, "Raid")
-local stats = ui:CreatePage("Stats", "rbxassetid://18463215851")
+
+local stats = ui:CreatePage("Stats", "rbxassetid://6031260786")
 local statsSec = ui:Section(stats, "Stats")
-local teleport = ui:CreatePage("Teleport", "rbxassetid://6723742959")
+
+local teleport = ui:CreatePage("Teleport", "rbxassetid://6031302930")
 local teleportSec = ui:Section(teleport, "Teleport")
-local status = ui:CreatePage("Status", "rbxassetid://124871982298256")
+
+local status = ui:CreatePage("Status", "rbxassetid://6031154871")
 local statusSec = ui:Section(status, "Status")
-local visual = ui:CreatePage("Visual", "rbxassetid://7035631386")
+
+local visual = ui:CreatePage("Visual", "rbxassetid://6031289461")
 local visualSec = ui:Section(visual, "Visual")
-local shop = ui:CreatePage("Shop", "rbxassetid://11385395257")
+
+local shop = ui:CreatePage("Shop", "rbxassetid://6031315029")
 local shopSec = ui:Section(shop, "Shop")
-local misc = ui:CreatePage("Misc", "rbxassetid://9405931596")
+
+local misc = ui:CreatePage("Misc", "rbxassetid://6031327770")
 local miscSec = ui:Section(misc, "Misc")
+
 
 ui:Toggle(miscSec, "No Clip", function(v)
     if v then
