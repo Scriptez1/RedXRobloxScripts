@@ -109,6 +109,7 @@ function RedX.new(title)
     local main = Instance.new("Frame", gui)
     main.Size = UDim2.fromScale(0.75,0.8)
     main.Position = UDim2.fromScale(0.125,0.1)
+    main.BackgroundTransparency = 0.2
     main.BackgroundColor3 = theme.bg
     main.BorderSizePixel = 0
     main.ClipsDescendants = false
