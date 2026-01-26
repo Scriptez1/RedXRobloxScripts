@@ -151,20 +151,14 @@ function RedX.new(title)
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
 
-    -- Butonlar için container (Logo altında başlar)
-    local buttonsContainer = Instance.new("Frame", sidebar)
-    buttonsContainer.Size = UDim2.new(1,0,1,-75)  -- Logo için 65 + 10 padding = 75
-    buttonsContainer.Position = UDim2.new(0,0,0,75)
-    buttonsContainer.BackgroundTransparency = 1
-    buttonsContainer.ZIndex = 3
-
-    local sidebarPadding = Instance.new("UIPadding", buttonsContainer)
-    sidebarPadding.PaddingTop = UDim.new(0,0)
+    -- UIListLayout direkt sidebar'a eklenecek
+    local sidebarPadding = Instance.new("UIPadding", sidebar)
+    sidebarPadding.PaddingTop = UDim.new(0,10)
     sidebarPadding.PaddingLeft = UDim.new(0,8)
     sidebarPadding.PaddingRight = UDim.new(0,8)
     sidebarPadding.PaddingBottom = UDim.new(0,8)
 
-    local sidebarLayout = Instance.new("UIListLayout", buttonsContainer)
+    local sidebarLayout = Instance.new("UIListLayout", sidebar)
     sidebarLayout.Padding = UDim.new(0,8)
     sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
     sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -325,7 +319,7 @@ function RedX.new(title)
     end)
 
     self.Main = main
-    self.Sidebar = buttonsContainer  -- ButtonsContainer kullan
+    self.Sidebar = sidebar
     self.HeaderBar = headerBar
     self.Pages = {}
     self.CurrentPage = nil
@@ -508,6 +502,7 @@ function RedX:Toggle(parent, text, callback)
     end)
 end
 
+-- AUTO LOAD DEMO
 local ui = RedX.new("RedX Hub : Blox Fruits")
 local farm = ui:CreatePage("Farm", "rbxassetid://7733674079")
 local farmSec = ui:Section(farm, "Farm")
