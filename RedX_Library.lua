@@ -238,29 +238,35 @@ function RedX.new(title)
     header.Size = UDim2.new(1,-120,1,0)
     header.TextXAlignment = Enum.TextXAlignment.Left
 
+    local rightButtons = Instance.new("Frame", headerBar)
+    rightButtons.Size = UDim2.new(0,90,1,0)
+    rightButtons.Position = UDim2.new(1,-90,0,0)
+    rightButtons.BackgroundTransparency = 1
+    
+    local rightLayout = Instance.new("UIListLayout", rightButtons)
+    rightLayout.FillDirection = Enum.FillDirection.Horizontal
+    rightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    rightLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    rightLayout.Padding = UDim.new(0,8)
+
     -- Minimize button
-    local minimizeBtn = Instance.new("TextButton", headerBar)
+    local minimizeBtn = Instance.new("TextButton", rightButtons)
     minimizeBtn.Size = UDim2.new(0,32,0,32)
-    minimizeBtn.Position = UDim2.new(1,-100,0.5,-16)
     minimizeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     minimizeBtn.Text = "−"
     minimizeBtn.Font = Enum.Font.GothamBold
     minimizeBtn.TextSize = 18
     minimizeBtn.TextColor3 = theme.text
-    minimizeBtn.ZIndex = 3
     corner(minimizeBtn,6)
     addHover(minimizeBtn, Color3.fromRGB(40,40,40), Color3.fromRGB(50,50,50))
 
-    -- Close button
-    local closeBtn = Instance.new("TextButton", headerBar)
+    local closeBtn = Instance.new("TextButton", rightButtons)
     closeBtn.Size = UDim2.new(0,32,0,32)
-    closeBtn.Position = UDim2.new(1,-70,0.5,-16)
     closeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     closeBtn.Text = "×"
     closeBtn.Font = Enum.Font.GothamBold
     closeBtn.TextSize = 24
     closeBtn.TextColor3 = theme.text
-    closeBtn.ZIndex = 3
     corner(closeBtn,6)
     addHover(closeBtn, Color3.fromRGB(40,40,40), theme.accent)
 
