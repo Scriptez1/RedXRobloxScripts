@@ -243,6 +243,9 @@ function RedX.new(title)
     rightButtons.Position = UDim2.new(1,-50,0,0)
     rightButtons.BackgroundTransparency = 1
     
+    local pad = Instance.new("UIPadding", rightButtons)
+    pad.PaddingRight = UDim.new(0,20)
+
     local rightLayout = Instance.new("UIListLayout", rightButtons)
     rightLayout.FillDirection = Enum.FillDirection.Horizontal
     rightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
