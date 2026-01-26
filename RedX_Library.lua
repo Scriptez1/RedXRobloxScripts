@@ -46,7 +46,7 @@ function RedX.new(title)
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.IgnoreGuiInset = true
 
-    -- Minimize için küçük ikon (DRAGGABLE FİX)
+    -- Minimize için küçük ikon
     local miniIcon = Instance.new("Frame", gui)
     miniIcon.Size = UDim2.new(0,60,0,60)
     miniIcon.Position = UDim2.new(0,20,0,20)
@@ -72,7 +72,7 @@ function RedX.new(title)
     miniBtn.Text = ""
     miniBtn.ZIndex = 2
 
-    -- Mini icon draggable yapma
+    -- Mini icon draggable
     local miniDragging = false
     local miniDragInput, miniMousePos, miniFramePos
 
@@ -115,13 +115,14 @@ function RedX.new(title)
     main.Active = false
     corner(main,14)
 
-    -- Sidebar (ÖNCE OLUŞTUR)
+    -- Sidebar
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0,200,1,0)
     sidebar.Position = UDim2.new(0,0,0,0)
     sidebar.BackgroundColor3 = theme.panel
     sidebar.BorderSizePixel = 0
     sidebar.ZIndex = 2
+    sidebar.ClipsDescendants = true  -- ÖNEMLİ: Taşmaları önler
     corner(sidebar,14)
 
     local sidebarMask = Instance.new("Frame", sidebar)
@@ -131,24 +132,13 @@ function RedX.new(title)
     sidebarMask.BorderSizePixel = 0
     sidebarMask.ZIndex = 2
 
-    local sidebarPadding = Instance.new("UIPadding", sidebar)
-    sidebarPadding.PaddingTop = UDim.new(0,10)
-    sidebarPadding.PaddingLeft = UDim.new(0,8)
-    sidebarPadding.PaddingRight = UDim.new(0,8)
-    sidebarPadding.PaddingBottom = UDim.new(0,8)
-
-    local sidebarLayout = Instance.new("UIListLayout", sidebar)
-    sidebarLayout.Padding = UDim.new(0,8)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
-
-    -- Sidebar logosu
+    -- Sidebar logosu (ListLayout'tan ÖNCE eklenmeli)
     local logoFrame = Instance.new("Frame", sidebar)
-    logoFrame.Size = UDim2.new(1,0,0,55)
+    logoFrame.Size = UDim2.new(1,0,0,65)
+    logoFrame.Position = UDim2.new(0,0,0,0)  -- Manuel pozisyon
     logoFrame.BackgroundTransparency = 1
     logoFrame.ZIndex = 5
-    logoFrame.LayoutOrder = -1
+    logoFrame.LayoutOrder = -1000  -- En üstte olması için
 
     local logoText = Instance.new("TextLabel", logoFrame)
     logoText.Text = "RedX"
@@ -161,7 +151,26 @@ function RedX.new(title)
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
 
-    -- Header bar (DRAGGABLE OLACAK)
+    -- Butonlar için container (Logo altında başlar)
+    local buttonsContainer = Instance.new("Frame", sidebar)
+    buttonsContainer.Size = UDim2.new(1,0,1,-75)  -- Logo için 65 + 10 padding = 75
+    buttonsContainer.Position = UDim2.new(0,0,0,75)
+    buttonsContainer.BackgroundTransparency = 1
+    buttonsContainer.ZIndex = 3
+
+    local sidebarPadding = Instance.new("UIPadding", buttonsContainer)
+    sidebarPadding.PaddingTop = UDim.new(0,0)
+    sidebarPadding.PaddingLeft = UDim.new(0,8)
+    sidebarPadding.PaddingRight = UDim.new(0,8)
+    sidebarPadding.PaddingBottom = UDim.new(0,8)
+
+    local sidebarLayout = Instance.new("UIListLayout", buttonsContainer)
+    sidebarLayout.Padding = UDim.new(0,8)
+    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
+
+    -- Header bar
     local headerBar = Instance.new("Frame", main)
     headerBar.Size = UDim2.new(1,-200,0,50)
     headerBar.Position = UDim2.new(0,200,0,0)
@@ -180,7 +189,7 @@ function RedX.new(title)
     headerLine.BackgroundColor3 = theme.stroke
     headerLine.BorderSizePixel = 0
 
-    -- DRAGGABLE İŞLEMLERİ HEADER'A TAŞINDI
+    -- Draggable
     local dragging = false
     local dragInput, mousePos, framePos
 
@@ -277,16 +286,14 @@ function RedX.new(title)
         isMinimized = false
     end)
 
-    -- Close functionality (DÜZELTİLDİ - TextTransparency hatası giderildi)
+    -- Close functionality
     closeBtn.MouseButton1Click:Connect(function()
-        -- Ana frame animasyonu
         TweenService:Create(main, TweenInfo.new(0.2), {
             BackgroundTransparency = 1,
             Size = UDim2.new(0,0,0,0),
             Position = UDim2.new(0,20,0,20)
         }):Play()
         
-        -- Tüm alt elemanları fade out yap
         for _, child in pairs(main:GetDescendants()) do
             if child:IsA("GuiObject") then
                 pcall(function()
@@ -318,7 +325,7 @@ function RedX.new(title)
     end)
 
     self.Main = main
-    self.Sidebar = sidebar
+    self.Sidebar = buttonsContainer  -- ButtonsContainer kullan
     self.HeaderBar = headerBar
     self.Pages = {}
     self.CurrentPage = nil
@@ -501,7 +508,6 @@ function RedX:Toggle(parent, text, callback)
     end)
 end
 
--- AUTO LOAD DEMO
 local ui = RedX.new("RedX Hub : Blox Fruits")
 local farm = ui:CreatePage("Farm", "rbxassetid://7733674079")
 local farmSec = ui:Section(farm, "Farm")
