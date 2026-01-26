@@ -26,7 +26,6 @@ local function stroke(o)
     s.Parent = o
 end
 
--- Smooth hover animasyonu
 local function addHover(btn, normalColor, hoverColor)
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = hoverColor}):Play()
@@ -56,6 +55,7 @@ function RedX.new(title)
     miniIcon.Active = true
     miniIcon.Draggable = true
     corner(miniIcon,12)
+    stroke(miniIcon)
 
     local miniText = Instance.new("TextLabel", miniIcon)
     miniText.Text = "RX"
@@ -77,15 +77,34 @@ function RedX.new(title)
     main.Position = UDim2.fromScale(0.125,0.1)
     main.BackgroundColor3 = theme.bg
     main.BorderSizePixel = 0
-    main.ClipsDescendants = true
+    main.ClipsDescendants = false
     main.Active = true
     corner(main,14)
 
-    -- Draggable yapma
+    -- Header bar (DRAGGABLE OLACAK)
+    local headerBar = Instance.new("Frame", main)
+    headerBar.Size = UDim2.new(1,-200,0,50)
+    headerBar.Position = UDim2.new(0,200,0,0)
+    headerBar.BackgroundColor3 = theme.bg
+    headerBar.BorderSizePixel = 0
+    headerBar.ZIndex = 2
+    headerBar.ClipsDescendants = true
+    headerBar.Active = true
+
+    local headerCorner = Instance.new("UICorner", headerBar)
+    headerCorner.CornerRadius = UDim.new(0,14)
+
+    local headerLine = Instance.new("Frame", headerBar)
+    headerLine.Size = UDim2.new(1,0,0,1)
+    headerLine.Position = UDim2.new(0,0,1,0)
+    headerLine.BackgroundColor3 = theme.stroke
+    headerLine.BorderSizePixel = 0
+
+    -- DRAGGABLE İŞLEMLERİ HEADER'A TAŞINDI
     local dragging = false
     local dragInput, mousePos, framePos
 
-    main.InputBegan:Connect(function(input)
+    headerBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             mousePos = input.Position
@@ -99,7 +118,7 @@ function RedX.new(title)
         end
     end)
 
-    main.InputChanged:Connect(function(input)
+    headerBar.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             dragInput = input
         end
@@ -114,55 +133,6 @@ function RedX.new(title)
             )
         end
     end)
-
-    local sidebar = Instance.new("Frame", main)
-    sidebar.Size = UDim2.new(0,200,1,0)
-    sidebar.Position = UDim2.new(0,0,0,0)
-    sidebar.BackgroundColor3 = theme.panel
-    sidebar.BorderSizePixel = 0
-    sidebar.ZIndex = 2
-    corner(sidebar,14)
-
-    -- Sidebar için sağ kenar (köşeleri düzelt)
-    local sidebarMask = Instance.new("Frame", sidebar)
-    sidebarMask.Size = UDim2.new(0,20,1,0)
-    sidebarMask.Position = UDim2.new(1,-20,0,0)
-    sidebarMask.BackgroundColor3 = theme.panel
-    sidebarMask.BorderSizePixel = 0
-    sidebarMask.ZIndex = 2
-
-    -- Sidebar için padding
-    local sidebarPadding = Instance.new("UIPadding", sidebar)
-    sidebarPadding.PaddingTop = UDim.new(0,10)
-    sidebarPadding.PaddingLeft = UDim.new(0,8)
-    sidebarPadding.PaddingRight = UDim.new(0,8)
-    sidebarPadding.PaddingBottom = UDim.new(0,8)
-
-    local sidebarLayout = Instance.new("UIListLayout", sidebar)
-    sidebarLayout.Padding = UDim.new(0,8)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
-
-    -- Header bar (üst kısım)
-    local headerBar = Instance.new("Frame", main)
-    headerBar.Size = UDim2.new(1,-200,0,50)
-    headerBar.Position = UDim2.new(0,200,0,0)
-    headerBar.BackgroundColor3 = theme.bg
-    headerBar.BorderSizePixel = 0
-    headerBar.ZIndex = 2
-    headerBar.ClipsDescendants = true
-    
-    -- Sağ üst köşe
-    local headerCorner = Instance.new("UICorner", headerBar)
-    headerCorner.CornerRadius = UDim.new(0,14)
-
-    -- Alt çizgi
-    local headerLine = Instance.new("Frame", headerBar)
-    headerLine.Size = UDim2.new(1,0,0,1)
-    headerLine.Position = UDim2.new(0,0,1,0)
-    headerLine.BackgroundColor3 = theme.stroke
-    headerLine.BorderSizePixel = 0
 
     local header = Instance.new("TextLabel", headerBar)
     header.Text = title
@@ -183,6 +153,7 @@ function RedX.new(title)
     minimizeBtn.Font = Enum.Font.GothamBold
     minimizeBtn.TextSize = 18
     minimizeBtn.TextColor3 = theme.text
+    minimizeBtn.ZIndex = 3
     corner(minimizeBtn,6)
     addHover(minimizeBtn, Color3.fromRGB(40,40,40), Color3.fromRGB(50,50,50))
 
@@ -195,51 +166,40 @@ function RedX.new(title)
     closeBtn.Font = Enum.Font.GothamBold
     closeBtn.TextSize = 24
     closeBtn.TextColor3 = theme.text
+    closeBtn.ZIndex = 3
     corner(closeBtn,6)
     addHover(closeBtn, Color3.fromRGB(40,40,40), theme.accent)
 
-    -- Minimize functionality
-    local isMinimized = false
-    minimizeBtn.MouseButton1Click:Connect(function()
-        isMinimized = not isMinimized
-        if isMinimized then
-            -- Minimize - küçük ikona dönüş
-            TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-                Size = UDim2.fromScale(0,0),
-                Position = UDim2.fromScale(0.5,0.5)
-            }):Play()
-            wait(0.3)
-            main.Visible = false
-            miniIcon.Visible = true
-        end
-    end)
+    local sidebar = Instance.new("Frame", main)
+    sidebar.Size = UDim2.new(0,200,1,0)
+    sidebar.Position = UDim2.new(0,0,0,0)
+    sidebar.BackgroundColor3 = theme.panel
+    sidebar.BorderSizePixel = 0
+    sidebar.ZIndex = 2
+    corner(sidebar,14)
 
-    -- Mini icon'a tıklayınca geri aç
-    miniBtn.MouseButton1Click:Connect(function()
-        miniIcon.Visible = false
-        main.Visible = true
-        main.Size = UDim2.fromScale(0,0)
-        main.Position = UDim2.fromScale(0.5,0.5)
-        TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-            Size = UDim2.fromScale(0.75,0.8),
-            Position = UDim2.fromScale(0.125,0.1)
-        }):Play()
-    end)
+    local sidebarMask = Instance.new("Frame", sidebar)
+    sidebarMask.Size = UDim2.new(0,20,1,0)
+    sidebarMask.Position = UDim2.new(1,-20,0,0)
+    sidebarMask.BackgroundColor3 = theme.panel
+    sidebarMask.BorderSizePixel = 0
+    sidebarMask.ZIndex = 2
 
-    -- Close functionality
-    closeBtn.MouseButton1Click:Connect(function()
-        TweenService:Create(main, TweenInfo.new(0.2), {
-            BackgroundTransparency = 1,
-            Size = UDim2.fromScale(0.65,0.7)
-        }):Play()
-        wait(0.2)
-        gui:Destroy()
-    end)
+    local sidebarPadding = Instance.new("UIPadding", sidebar)
+    sidebarPadding.PaddingTop = UDim.new(0,10)
+    sidebarPadding.PaddingLeft = UDim.new(0,8)
+    sidebarPadding.PaddingRight = UDim.new(0,8)
+    sidebarPadding.PaddingBottom = UDim.new(0,8)
 
-    -- Sidebar logosunu ekle (üst kısım)
+    local sidebarLayout = Instance.new("UIListLayout", sidebar)
+    sidebarLayout.Padding = UDim.new(0,8)
+    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
+
+    -- Sidebar logosu
     local logoFrame = Instance.new("Frame", sidebar)
     logoFrame.Size = UDim2.new(1,0,0,55)
-    logoFrame.Position = UDim2.new(0,0,0,0)
     logoFrame.BackgroundTransparency = 1
     logoFrame.ZIndex = 5
     logoFrame.LayoutOrder = -1
@@ -255,6 +215,62 @@ function RedX.new(title)
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
 
+    -- Minimize functionality
+    local isMinimized = false
+    minimizeBtn.MouseButton1Click:Connect(function()
+        isMinimized = not isMinimized
+        if isMinimized then
+            TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+                Size = UDim2.new(0,0,0,0),
+                Position = UDim2.new(0,20,0,20)
+            }):Play()
+            task.wait(0.3)
+            main.Visible = false
+            miniIcon.Visible = true
+        end
+    end)
+
+    miniBtn.MouseButton1Click:Connect(function()
+        miniIcon.Visible = false
+        main.Visible = true
+        main.Size = UDim2.new(0,0,0,0)
+        main.Position = UDim2.new(0,20,0,20)
+        TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+            Size = UDim2.fromScale(0.75,0.8),
+            Position = UDim2.fromScale(0.125,0.1)
+        }):Play()
+        isMinimized = false
+    end)
+
+    -- Close functionality (TÜM ELEMANLAR AYNI ANDA KAPANIR)
+    closeBtn.MouseButton1Click:Connect(function()
+        -- Tüm elemanları aynı anda animate et
+        local tweens = {}
+        
+        for _, child in pairs(main:GetDescendants()) do
+            if child:IsA("GuiObject") and child ~= main then
+                table.insert(tweens, TweenService:Create(child, TweenInfo.new(0.2), {
+                    BackgroundTransparency = 1,
+                    TextTransparency = 1
+                }))
+            end
+        end
+        
+        table.insert(tweens, TweenService:Create(main, TweenInfo.new(0.2), {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(0,0,0,0),
+            Position = UDim2.new(0,20,0,20)
+        }))
+        
+        -- Tüm animasyonları başlat
+        for _, tween in pairs(tweens) do
+            tween:Play()
+        end
+        
+        task.wait(0.2)
+        gui:Destroy()
+    end)
+
     self.Main = main
     self.Sidebar = sidebar
     self.HeaderBar = headerBar
@@ -266,14 +282,14 @@ end
 
 function RedX:CreatePage(name, iconUrl)
     local btn = Instance.new("TextButton", self.Sidebar)
-    btn.Size = UDim2.new(1,-16,0,42)
+    btn.Size = UDim2.new(1,0,0,42)
     btn.BackgroundColor3 = Color3.fromRGB(32,32,32)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
+    btn.ZIndex = 3
     corner(btn,8)
 
-    -- Hover efekti
     addHover(btn, Color3.fromRGB(32,32,32), Color3.fromRGB(38,38,38))
 
     local icon = Instance.new("ImageLabel", btn)
@@ -281,6 +297,7 @@ function RedX:CreatePage(name, iconUrl)
     icon.Position = UDim2.new(0,10,0.5,-11)
     icon.BackgroundTransparency = 1
     icon.Image = iconUrl or ""
+    icon.ZIndex = 4
 
     local txt = Instance.new("TextLabel", btn)
     txt.Text = name
@@ -291,14 +308,15 @@ function RedX:CreatePage(name, iconUrl)
     txt.Position = UDim2.new(0,40,0,0)
     txt.Size = UDim2.new(1,-45,1,0)
     txt.TextXAlignment = Enum.TextXAlignment.Left
+    txt.ZIndex = 4
 
-    -- Seçili gösterge (sol kırmızı çubuk)
     local indicator = Instance.new("Frame", btn)
     indicator.Size = UDim2.new(0,3,0,24)
-    indicator.Position = UDim2.new(0,-8,0.5,-12)
+    indicator.Position = UDim2.new(0,0,0.5,-12)
     indicator.BackgroundColor3 = theme.accent
     indicator.BorderSizePixel = 0
     indicator.Visible = false
+    indicator.ZIndex = 4
     corner(indicator,2)
 
     local page = Instance.new("ScrollingFrame", self.Main)
@@ -310,7 +328,6 @@ function RedX:CreatePage(name, iconUrl)
     page.BackgroundTransparency = 1
     page.BorderSizePixel = 0
 
-    -- Padding ekle
     local pagePadding = Instance.new("UIPadding", page)
     pagePadding.PaddingTop = UDim.new(0,10)
     pagePadding.PaddingLeft = UDim.new(0,10)
@@ -321,14 +338,14 @@ function RedX:CreatePage(name, iconUrl)
     layout.Padding = UDim.new(0,10)
 
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        page.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y+10)
+        page.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y+20)
     end)
 
     btn.MouseButton1Click:Connect(function()
         for _,p in pairs(self.Pages) do
             p.Visible = false
         end
-        -- Tüm butonları normale döndür
+        
         for _,child in pairs(self.Sidebar:GetChildren()) do
             if child:IsA("TextButton") then
                 local ind = child:FindFirstChild("Frame")
@@ -338,21 +355,18 @@ function RedX:CreatePage(name, iconUrl)
                 }):Play()
             end
         end
-        -- Seçili olanı vurgula
+        
         indicator.Visible = true
         TweenService:Create(btn, TweenInfo.new(0.15), {
             BackgroundColor3 = Color3.fromRGB(40,40,40)
         }):Play()
         page.Visible = true
         self.CurrentPage = page
-        
-        -- Smooth geçiş
         page.CanvasPosition = Vector2.new(0,0)
     end)
 
     table.insert(self.Pages,page)
     
-    -- İlk sayfa otomatik seçili olsun
     if #self.Pages == 1 then
         page.Visible = true
         indicator.Visible = true
@@ -365,13 +379,12 @@ end
 
 function RedX:Section(page, title)
     local card = Instance.new("Frame", page)
-    card.Size = UDim2.new(1,-10,0,70)
+    card.Size = UDim2.new(1,0,0,70)
     card.BackgroundColor3 = theme.card
     card.BorderSizePixel = 0
     corner(card,10)
     stroke(card)
 
-    -- Hafif gölge efekti
     local innerShadow = Instance.new("Frame", card)
     innerShadow.Size = UDim2.new(1,0,0,1)
     innerShadow.Position = UDim2.new(0,0,0,0)
@@ -418,7 +431,6 @@ function RedX:Toggle(parent, text, callback)
     toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
     corner(toggle,20)
 
-    -- Toggle topu
     local knob = Instance.new("Frame", toggle)
     knob.Size = UDim2.new(0,16,0,16)
     knob.Position = UDim2.new(0,3,0.5,-8)
@@ -429,7 +441,6 @@ function RedX:Toggle(parent, text, callback)
     toggle.MouseButton1Click:Connect(function()
         on = not on
         
-        -- Smooth animasyon
         TweenService:Create(toggle, TweenInfo.new(0.2), {
             BackgroundColor3 = on and theme.accent or Color3.fromRGB(60,60,60)
         }):Play()
