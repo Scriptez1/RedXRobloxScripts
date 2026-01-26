@@ -1,123 +1,133 @@
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local guiParent = player:WaitForChild("PlayerGui")
 
 local RedX = {}
 RedX.__index = RedX
 
 local theme = {
-    Primary = Color3.fromRGB(220,20,60),
-    Dark = Color3.fromRGB(30,30,30),
-    Gray = Color3.fromRGB(55,55,55),
-    White = Color3.fromRGB(255,255,255)
+    Bg = Color3.fromRGB(18,18,18),
+    Panel = Color3.fromRGB(28,28,28),
+    Card = Color3.fromRGB(36,36,36),
+    Accent = Color3.fromRGB(220,20,60),
+    Text = Color3.fromRGB(240,240,240),
+    Sub = Color3.fromRGB(170,170,170)
 }
 
-local function tween(o,p,t)
-    TweenService:Create(o,TweenInfo.new(t,Enum.EasingStyle.Back,Enum.EasingDirection.Out),p):Play()
+local function corner(o,r)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0,r)
+    c.Parent = o
 end
 
-local function corner(o,r)
-    local c=Instance.new("UICorner")
-    c.CornerRadius=UDim.new(0,r)
-    c.Parent=o
+local function stroke(o,t)
+    local s = Instance.new("UIStroke")
+    s.Color = Color3.fromRGB(60,60,60)
+    s.Thickness = t
+    s.Parent = o
 end
 
 function RedX.new(title)
-    local self=setmetatable({},RedX)
+    local self = setmetatable({}, RedX)
 
-    self.Gui=Instance.new("ScreenGui",playerGui)
-    self.Gui.ResetOnSpawn=false
+    self.Gui = Instance.new("ScreenGui", guiParent)
+    self.Gui.ResetOnSpawn = false
 
-    self.Frame=Instance.new("Frame",self.Gui)
-    self.Frame.Size=UDim2.new(0,0,0,0)
-    self.Frame.Position=UDim2.new(0.5,0,0.5,0)
-    self.Frame.AnchorPoint=Vector2.new(0.5,0.5)
-    self.Frame.BackgroundColor3=theme.Dark
-    corner(self.Frame,14)
+    local main = Instance.new("Frame", self.Gui)
+    main.Size = UDim2.new(0.7,0,0.75,0)
+    main.Position = UDim2.new(0.15,0,0.12,0)
+    main.BackgroundColor3 = theme.Bg
+    corner(main,16)
 
-    local header=Instance.new("Frame",self.Frame)
-    header.Size=UDim2.new(1,0,0,50)
-    header.BackgroundColor3=theme.Primary
-    corner(header,14)
+    local sidebar = Instance.new("Frame", main)
+    sidebar.Size = UDim2.new(0,180,1,0)
+    sidebar.BackgroundColor3 = theme.Panel
+    corner(sidebar,16)
 
-    local titleLabel=Instance.new("TextLabel",header)
-    titleLabel.Size=UDim2.new(1,-60,1,0)
-    titleLabel.Position=UDim2.new(0,10,0,0)
-    titleLabel.BackgroundTransparency=1
-    titleLabel.Text=title
-    titleLabel.Font=Enum.Font.GothamBold
-    titleLabel.TextSize=18
-    titleLabel.TextColor3=theme.White
-    titleLabel.TextXAlignment=Enum.TextXAlignment.Left
+    local header = Instance.new("TextLabel", main)
+    header.Size = UDim2.new(1,-200,0,50)
+    header.Position = UDim2.new(0,190,0,10)
+    header.BackgroundTransparency = 1
+    header.Text = title
+    header.Font = Enum.Font.GothamBold
+    header.TextSize = 20
+    header.TextColor3 = theme.Text
+    header.TextXAlignment = Enum.TextXAlignment.Left
 
-    local close=Instance.new("TextButton",header)
-    close.Size=UDim2.new(0,40,0,40)
-    close.Position=UDim2.new(1,-45,0,5)
-    close.Text="X"
-    close.Font=Enum.Font.GothamBold
-    close.TextSize=18
-    close.BackgroundColor3=theme.Gray
-    close.TextColor3=theme.White
-    corner(close,8)
+    local content = Instance.new("ScrollingFrame", main)
+    content.Position = UDim2.new(0,190,0,60)
+    content.Size = UDim2.new(1,-200,1,-70)
+    content.CanvasSize = UDim2.new(0,0,0,0)
+    content.ScrollBarThickness = 4
+    content.BackgroundTransparency = 1
 
-    self.Content=Instance.new("ScrollingFrame",self.Frame)
-    self.Content.Size=UDim2.new(1,-20,1,-70)
-    self.Content.Position=UDim2.new(0,10,0,60)
-    self.Content.CanvasSize=UDim2.new(0,0,0,0)
-    self.Content.ScrollBarThickness=4
-    self.Content.BackgroundTransparency=1
+    local layout = Instance.new("UIListLayout", content)
+    layout.Padding = UDim.new(0,10)
 
-    self.Layout=Instance.new("UIListLayout",self.Content)
-    self.Layout.Padding=UDim.new(0,8)
-
-    self.Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        self.Content.CanvasSize=UDim2.new(0,0,0,self.Layout.AbsoluteContentSize.Y+10)
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        content.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y+10)
     end)
 
-    close.MouseButton1Click:Connect(function()
-        self:Destroy()
-    end)
-
-    local size=isMobile and UDim2.new(0.9,0,0.8,0) or UDim2.new(0.4,0,0.6,0)
-    tween(self.Frame,{Size=size},0.35)
+    self.Content = content
+    self.Sidebar = sidebar
 
     return self
 end
 
-function RedX:Destroy()
-    tween(self.Frame,{Size=UDim2.new(0,0,0,0)},0.25)
-    task.delay(0.3,function()
-        self.Gui:Destroy()
+function RedX:Section(name)
+    local card = Instance.new("Frame", self.Content)
+    card.Size = UDim2.new(1,0,0,80)
+    card.BackgroundColor3 = theme.Card
+    corner(card,12)
+    stroke(card,1)
+
+    local title = Instance.new("TextLabel", card)
+    title.Position = UDim2.new(0,15,0,10)
+    title.Size = UDim2.new(1,-30,0,25)
+    title.BackgroundTransparency = 1
+    title.Text = name
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 14
+    title.TextColor3 = theme.Text
+    title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local holder = Instance.new("Frame", card)
+    holder.Position = UDim2.new(0,10,0,40)
+    holder.Size = UDim2.new(1,-20,0,30)
+    holder.BackgroundTransparency = 1
+
+    return holder
+end
+
+function RedX:Toggle(parent, text, callback)
+    local toggle = Instance.new("Frame", parent)
+    toggle.Size = UDim2.new(1,0,1,0)
+    toggle.BackgroundTransparency = 1
+
+    local label = Instance.new("TextLabel", toggle)
+    label.Size = UDim2.new(0.7,0,1,0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextColor3 = theme.Sub
+    label.TextXAlignment = Enum.TextXAlignment.Left
+
+    local button = Instance.new("TextButton", toggle)
+    button.Size = UDim2.new(0,40,0,20)
+    button.Position = UDim2.new(1,-45,0.5,-10)
+    button.BackgroundColor3 = Color3.fromRGB(60,60,60)
+    button.Text = ""
+    corner(button,20)
+
+    local on = false
+
+    button.MouseButton1Click:Connect(function()
+        on = not on
+        button.BackgroundColor3 = on and theme.Accent or Color3.fromRGB(60,60,60)
+        if callback then callback(on) end
     end)
 end
-
-function RedX:Label(t)
-    local l=Instance.new("TextLabel",self.Content)
-    l.Size=UDim2.new(1,0,0,30)
-    l.BackgroundTransparency=1
-    l.Text=t
-    l.Font=Enum.Font.Gotham
-    l.TextSize=14
-    l.TextColor3=theme.White
-    l.TextXAlignment=Enum.TextXAlignment.Left
-end
-
-function RedX:Button(t,f)
-    local b=Instance.new("TextButton",self.Content)
-    b.Size=UDim2.new(1,0,0,35)
-    b.BackgroundColor3=theme.Gray
-    b.Text=t
-    b.Font=Enum.Font.Gotham
-    b.TextSize=14
-    b.TextColor3=theme.White
-    corner(b,8)
-    b.MouseButton1Click:Connect(function()
-        if f then f() end
-    end)
-end
-
-return RedX
