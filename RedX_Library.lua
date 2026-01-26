@@ -486,7 +486,7 @@ end
 
 function RedX:Toggle(parent, text, callback)
     local row = Instance.new("Frame", parent)
-    row.Size = UDim2.new(1,0,1,0)
+    row.Size = UDim2.new(1,0,0,32)
     row.BackgroundTransparency = 1
 
     local label = Instance.new("TextLabel", row)
