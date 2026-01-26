@@ -596,225 +596,33 @@ ui:Toggle(farmSec, "Auto Farm Level", function(v)
     print("Auto Farm:", v and "Açık" or "Kapalı")
 end)
 
--- Combat Scripts
-local combat = ui:CreatePage("Combat", "rbxassetid://7734051562")
-local combatSec = ui:Section(combat, "Combat Features")
-ui:Toggle(combatSec, "Auto Attack", function(v)
-    if v then
-        _G.autoAttack = true
-        while _G.autoAttack do
-            local plr = game.Players.LocalPlayer
-            if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                local enemies = workspace.Enemies:GetChildren()
-                for _, enemy in pairs(enemies) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        plr.Character.Humanoid:MoveTo(enemy.PrimaryPart.Position)
-                        task.wait(0.5)
-                        if (enemy.PrimaryPart.Position - plr.Character.PrimaryPart.Position).Magnitude < 10 then
-                            game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("Attack", enemy)
-                        end
-                    end
-                end
-            end
-            task.wait(1)
-        end
-    else
-        _G.autoAttack = false
-    end
-end)
+local quests = ui:CreatePage("Quests/Items", "rbxassetid://7733715400")
+local questsSec = ui:Section(quests, "Quests/Items")
 
-ui:Toggle(combatSec, "Kill Aura", function(v)
-    if v then
-        _G.killAura = true
-        while _G.killAura do
-            local plr = game.Players.LocalPlayer
-            if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                local enemies = workspace.Enemies:GetChildren()
-                for _, enemy in pairs(enemies) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        if (enemy.PrimaryPart.Position - plr.Character.PrimaryPart.Position).Magnitude < 15 then
-                            game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("Attack", enemy)
-                        end
-                    end
-                end
-            end
-            task.wait(0.1)
-        end
-    else
-        _G.killAura = false
-    end
-end)
+local fruit = ui:CreatePage("Fruit", "rbxassetid://7733992294")
+local fruitSec = ui:Section(fruit, "Fruit")
 
--- Movement Scripts
-local movement = ui:CreatePage("Movement", "rbxassetid://7733986726")
-local moveSec = ui:Section(movement, "Movement Features")
-ui:Toggle(moveSec, "Speed Hack", function(v)
-    if v then
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
-    else
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-    end
-end)
+local raid = ui:CreatePage("Raid", "rbxassetid://7733749833")
+local raidSec = ui:Section(raid, "Raid")
 
-ui:Toggle(moveSec, "High Jump", function(v)
-    if v then
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
-    else
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
-    end
-end)
+local stats = ui:CreatePage("Stats", "rbxassetid://7733774602")
+local statsSec = ui:Section(stats, "Stats")
 
-ui:Toggle(moveSec, "Fly", function(v)
-    if v then
-        _G.flying = true
-        local plr = game.Players.LocalPlayer
-        local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
-        local bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.MaxForce = Vector3.new(4000,4000,4000)
-        bodyVelocity.P = 1250
-        bodyVelocity.Velocity = Vector3.new(0,0,0)
-        bodyVelocity.Parent = humanoid.RootPart
-        
-        while _G.flying do
-            if humanoid.MoveDirection.Magnitude > 0 then
-                bodyVelocity.Velocity = humanoid.MoveDirection * 50
-            else
-                bodyVelocity.Velocity = Vector3.new(0,0,0)
-            end
-            task.wait()
-        end
-        bodyVelocity:Destroy()
-    else
-        _G.flying = false
-    end
-end)
+local teleport = ui:CreatePage("Teleport", "rbxassetid://7733911828")
+local teleportSec = ui:Section(teleport, "Teleport")
 
--- Farm Scripts
-local farm2 = ui:Section(farm, "Auto Farm")
-ui:Toggle(farm2, "Auto Fruit", function(v)
-    if v then
-        _G.autoFruit = true
-        while _G.autoFruit do
-            for _, fruit in pairs(workspace:GetChildren()) do
-                if fruit:IsA("Tool") and fruit:FindFirstChild("Handle") then
-                    local plr = game.Players.LocalPlayer
-                    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                        plr.Character.Humanoid:MoveTo(fruit.Handle.Position)
-                        task.wait(0.5)
-                        if (fruit.Handle.Position - plr.Character.PrimaryPart.Position).Magnitude < 5 then
-                            firetouchinterest(fruit.Handle, plr.Character.PrimaryPart, 0)
-                            firetouchinterest(fruit.Handle, plr.Character.PrimaryPart, 1)
-                        end
-                    end
-                end
-            end
-            task.wait(2)
-        end
-    else
-        _G.autoFruit = false
-    end
-end)
+local status = ui:CreatePage("Status", "rbxassetid://7733876142")
+local statusSec = ui:Section(status, "Status")
 
-ui:Toggle(farm2, "Auto Chest", function(v)
-    if v then
-        _G.autoChest = true
-        while _G.autoChest do
-            for _, chest in pairs(workspace:GetDescendants()) do
-                if chest.Name:lower():find("chest") and chest:IsA("Model") then
-                    local plr = game.Players.LocalPlayer
-                    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                        plr.Character.Humanoid:MoveTo(chest:GetModelCFrame().Position)
-                        task.wait(0.5)
-                        if (chest:GetModelCFrame().Position - plr.Character.PrimaryPart.Position).Magnitude < 5 then
-                            fireclickdetector(chest:FindFirstChildOfClass("ClickDetector"))
-                        end
-                    end
-                end
-            end
-            task.wait(3)
-        end
-    else
-        _G.autoChest = false
-    end
-end)
+local visual = ui:CreatePage("Visual", "rbxassetid://7733960981")
+local visualSec = ui:Section(visual, "Visual")
 
--- ESP Scripts
-local esp = ui:CreatePage("ESP", "rbxassetid://7734028415")
-local espSec = ui:Section(esp, "ESP Features")
-ui:Toggle(espSec, "Player ESP", function(v)
-    if v then
-        _G.playerESP = true
-        while _G.playerESP do
-            for _, player in pairs(game.Players:GetPlayers()) do
-                if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                    local highlight = player.Character:FindFirstChild("ESP_Highlight")
-                    if not highlight then
-                        highlight = Instance.new("Highlight")
-                        highlight.FillColor = Color3.new(1, 0, 0)
-                        highlight.OutlineColor = Color3.new(1, 1, 1)
-                        highlight.FillTransparency = 0.5
-                        highlight.OutlineTransparency = 0
-                        highlight.Parent = player.Character
-                    end
-                end
-            end
-            task.wait(1)
-        end
-    else
-        _G.playerESP = false
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player.Character then
-                local highlight = player.Character:FindFirstChild("ESP_Highlight")
-                if highlight then
-                    highlight:Destroy()
-                end
-            end
-        end
-    end
-end)
+local shop = ui:CreatePage("Shop", "rbxassetid://7733930644")
+local shopSec = ui:Section(shop, "Shop")
 
-ui:Toggle(espSec, "Item ESP", function(v)
-    if v then
-        _G.itemESP = true
-        while _G.itemESP do
-            for _, item in pairs(workspace:GetDescendants()) do
-                if item:IsA("Tool") and item:FindFirstChild("Handle") then
-                    local billboard = item:FindFirstChild("ESP_Billboard")
-                    if not billboard then
-                        billboard = Instance.new("BillboardGui")
-                        billboard.Size = UDim2.new(0, 100, 0, 40)
-                        billboard.StudsOffset = Vector3.new(0, 2, 0)
-                        billboard.AlwaysOnTop = true
-                        billboard.Parent = item.Handle
-                        
-                        local label = Instance.new("TextLabel")
-                        label.Size = UDim2.new(1, 0, 1, 0)
-                        label.BackgroundTransparency = 1
-                        label.Text = item.Name
-                        label.TextColor3 = Color3.new(1, 1, 0)
-                        label.TextStrokeTransparency = 0
-                        label.TextSize = 14
-                        label.Font = Enum.Font.Bold
-                        label.Parent = billboard
-                    end
-                end
-            end
-            task.wait(2)
-        end
-    else
-        _G.itemESP = false
-        for _, item in pairs(workspace:GetDescendants()) do
-            local billboard = item:FindFirstChild("ESP_Billboard")
-            if billboard then
-                billboard:Destroy()
-            end
-        end
-    end
-end)
+local misc = ui:CreatePage("Misc", "rbxassetid://7733892167")
+local miscSec = ui:Section(misc, "Misc")
 
--- Misc Scripts
-local misc = ui:CreatePage("Misc", "rbxassetid://7734063219")
-local miscSec = ui:Section(misc, "Miscellaneous")
 ui:Toggle(miscSec, "No Clip", function(v)
     if v then
         _G.noClip = true
@@ -842,9 +650,44 @@ ui:Toggle(miscSec, "No Clip", function(v)
     end
 end)
 
-ui:Toggle(miscSec, "Infinite Yield", function(v)
+ui:Toggle(miscSec, "Speed Hack", function(v)
     if v then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Edge-IY/infiniteyield/master/source"))()
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
+    else
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+    end
+end)
+
+ui:Toggle(miscSec, "High Jump", function(v)
+    if v then
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
+    else
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+    end
+end)
+
+ui:Toggle(miscSec, "Fly", function(v)
+    if v then
+        _G.flying = true
+        local plr = game.Players.LocalPlayer
+        local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(4000,4000,4000)
+        bodyVelocity.P = 1250
+        bodyVelocity.Velocity = Vector3.new(0,0,0)
+        bodyVelocity.Parent = humanoid.RootPart
+        
+        while _G.flying do
+            if humanoid.MoveDirection.Magnitude > 0 then
+                bodyVelocity.Velocity = humanoid.MoveDirection * 50
+            else
+                bodyVelocity.Velocity = Vector3.new(0,0,0)
+            end
+            task.wait()
+        end
+        bodyVelocity:Destroy()
+    else
+        _G.flying = false
     end
 end)
 
