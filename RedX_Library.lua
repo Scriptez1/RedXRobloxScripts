@@ -45,6 +45,7 @@ function RedX.new(title)
     local gui = Instance.new("ScreenGui", guiParent)
     gui.ResetOnSpawn = false
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.IgnoreGuiInset = true
 
     local main = Instance.new("Frame", gui)
     main.Size = UDim2.fromScale(0.75,0.8)
@@ -55,20 +56,31 @@ function RedX.new(title)
 
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0,200,1,0)
+    sidebar.Position = UDim2.new(0,0,0,0)
     sidebar.BackgroundColor3 = theme.panel
     sidebar.BorderSizePixel = 0
+    sidebar.ZIndex = 2
     corner(sidebar,14)
+
+    -- Sidebar için sağ kenar (köşeleri düzelt)
+    local sidebarMask = Instance.new("Frame", sidebar)
+    sidebarMask.Size = UDim2.new(0,14,1,0)
+    sidebarMask.Position = UDim2.new(1,-14,0,0)
+    sidebarMask.BackgroundColor3 = theme.panel
+    sidebarMask.BorderSizePixel = 0
+    sidebarMask.ZIndex = 2
 
     -- Sidebar için padding
     local sidebarPadding = Instance.new("UIPadding", sidebar)
     sidebarPadding.PaddingTop = UDim.new(0,60)
-    sidebarPadding.PaddingLeft = UDim.new(0,6)
-    sidebarPadding.PaddingRight = UDim.new(0,6)
-    sidebarPadding.PaddingBottom = UDim.new(0,6)
+    sidebarPadding.PaddingLeft = UDim.new(0,8)
+    sidebarPadding.PaddingRight = UDim.new(0,8)
+    sidebarPadding.PaddingBottom = UDim.new(0,8)
 
     local sidebarLayout = Instance.new("UIListLayout", sidebar)
     sidebarLayout.Padding = UDim.new(0,8)
     sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
     -- Header bar (üst kısım)
     local headerBar = Instance.new("Frame", main)
@@ -144,7 +156,7 @@ function RedX.new(title)
     logoFrame.Size = UDim2.new(1,0,0,50)
     logoFrame.Position = UDim2.new(0,0,0,0)
     logoFrame.BackgroundTransparency = 1
-    logoFrame.ZIndex = 3
+    logoFrame.ZIndex = 5
     logoFrame.LayoutOrder = -1
 
     local logoText = Instance.new("TextLabel", logoFrame)
@@ -155,6 +167,7 @@ function RedX.new(title)
     logoText.BackgroundTransparency = 1
     logoText.Size = UDim2.new(1,0,1,0)
     logoText.TextXAlignment = Enum.TextXAlignment.Center
+    logoText.ZIndex = 5
 
     self.Main = main
     self.Sidebar = sidebar
