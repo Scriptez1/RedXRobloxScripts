@@ -218,7 +218,8 @@ function RedX.new(title)
         end
     end)
 
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
+    game:GetService("UserInputServicepad.PaddingRight = UDim.new(0,40)
+").InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             local delta = input.Position - mousePos
             main.Position = UDim2.new(
@@ -239,12 +240,12 @@ function RedX.new(title)
     header.TextXAlignment = Enum.TextXAlignment.Left
 
     local rightButtons = Instance.new("Frame", headerBar)
-    rightButtons.Size = UDim2.new(0,90,1,0)
-    rightButtons.Position = UDim2.new(1,-50,0,0)
+    rightButtons.Size = UDim2.new(1,-20,1,0)
+    rightButtons.Position = UDim2.new(0,0,0,0)
     rightButtons.BackgroundTransparency = 1
     
     local pad = Instance.new("UIPadding", rightButtons)
-    pad.PaddingRight = UDim.new(0,20)
+    pad.PaddingRight = UDim.new(0,50)
 
     local rightLayout = Instance.new("UIListLayout", rightButtons)
     rightLayout.FillDirection = Enum.FillDirection.Horizontal
