@@ -241,7 +241,7 @@ function RedX.new(title)
     -- Minimize button
     local minimizeBtn = Instance.new("TextButton", headerBar)
     minimizeBtn.Size = UDim2.new(0,32,0,32)
-    minimizeBtn.Position = UDim2.new(1,-72,0.5,-16)
+    minimizeBtn.Position = UDim2.new(1,-92,0.5,-16)
     minimizeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     minimizeBtn.Text = "−"
     minimizeBtn.Font = Enum.Font.GothamBold
@@ -254,7 +254,7 @@ function RedX.new(title)
     -- Close button
     local closeBtn = Instance.new("TextButton", headerBar)
     closeBtn.Size = UDim2.new(0,32,0,32)
-    closeBtn.Position = UDim2.new(1,-32,0.5,-16)
+    closeBtn.Position = UDim2.new(1,-52,0.5,-16)
     closeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     closeBtn.Text = "×"
     closeBtn.Font = Enum.Font.GothamBold
@@ -339,14 +339,18 @@ function RedX.new(title)
 end
 
 function RedX:CreatePage(name, iconUrl)
+    print("Creating page:", name) -- DEBUG
+    
     local btn = Instance.new("TextButton", self.ButtonsScroll)
-    btn.Size = UDim2.new(1,0,0,42)
+    btn.Size = UDim2.new(1,-16,0,42) -- Genişliği biraz azalttık
     btn.BackgroundColor3 = Color3.fromRGB(32,32,32)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
     btn.ZIndex = 4
     corner(btn,8)
+    
+    print("Button created, parent:", btn.Parent.Name) -- DEBUG
 
     addHover(btn, Color3.fromRGB(32,32,32), Color3.fromRGB(38,38,38))
 
