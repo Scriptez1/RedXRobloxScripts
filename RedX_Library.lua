@@ -47,13 +47,73 @@ function RedX.new(title)
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.IgnoreGuiInset = true
 
+    -- Minimize için küçük ikon
+    local miniIcon = Instance.new("Frame", gui)
+    miniIcon.Size = UDim2.new(0,60,0,60)
+    miniIcon.Position = UDim2.new(0,20,0,20)
+    miniIcon.BackgroundColor3 = theme.panel
+    miniIcon.Visible = false
+    miniIcon.Active = true
+    miniIcon.Draggable = true
+    corner(miniIcon,12)
+
+    local miniText = Instance.new("TextLabel", miniIcon)
+    miniText.Text = "RX"
+    miniText.Font = Enum.Font.GothamBold
+    miniText.TextSize = 18
+    miniText.TextColor3 = theme.accent
+    miniText.BackgroundTransparency = 1
+    miniText.Size = UDim2.new(1,0,1,0)
+    miniText.TextXAlignment = Enum.TextXAlignment.Center
+    miniText.TextYAlignment = Enum.TextYAlignment.Center
+
+    local miniBtn = Instance.new("TextButton", miniIcon)
+    miniBtn.Size = UDim2.new(1,0,1,0)
+    miniBtn.BackgroundTransparency = 1
+    miniBtn.Text = ""
+
     local main = Instance.new("Frame", gui)
     main.Size = UDim2.fromScale(0.75,0.8)
     main.Position = UDim2.fromScale(0.125,0.1)
     main.BackgroundColor3 = theme.bg
     main.BorderSizePixel = 0
     main.ClipsDescendants = true
+    main.Active = true
     corner(main,14)
+
+    -- Draggable yapma
+    local dragging = false
+    local dragInput, mousePos, framePos
+
+    main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            mousePos = input.Position
+            framePos = main.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - mousePos
+            main.Position = UDim2.new(
+                framePos.X.Scale, framePos.X.Offset + delta.X,
+                framePos.Y.Scale, framePos.Y.Offset + delta.Y
+            )
+        end
+    end)
 
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0,200,1,0)
@@ -82,6 +142,7 @@ function RedX.new(title)
     sidebarLayout.Padding = UDim.new(0,8)
     sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
     sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
 
     -- Header bar (üst kısım)
     local headerBar = Instance.new("Frame", main)
@@ -141,10 +202,28 @@ function RedX.new(title)
     local isMinimized = false
     minimizeBtn.MouseButton1Click:Connect(function()
         isMinimized = not isMinimized
+        if isMinimized then
+            -- Minimize - küçük ikona dönüş
+            TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+                Size = UDim2.fromScale(0,0),
+                Position = UDim2.fromScale(0.5,0.5)
+            }):Play()
+            wait(0.3)
+            main.Visible = false
+            miniIcon.Visible = true
+        end
+    end)
+
+    -- Mini icon'a tıklayınca geri aç
+    miniBtn.MouseButton1Click:Connect(function()
+        miniIcon.Visible = false
+        main.Visible = true
+        main.Size = UDim2.fromScale(0,0)
+        main.Position = UDim2.fromScale(0.5,0.5)
         TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-            Size = isMinimized and UDim2.fromScale(0.75,0.065) or UDim2.fromScale(0.75,0.8)
+            Size = UDim2.fromScale(0.75,0.8),
+            Position = UDim2.fromScale(0.125,0.1)
         }):Play()
-        minimizeBtn.Text = isMinimized and "+" or "−"
     end)
 
     -- Close functionality
@@ -192,6 +271,8 @@ function RedX:CreatePage(name, iconUrl)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
+    btn.Visible = true
+    btn.LayoutOrder = #self.Pages + 1
     corner(btn,8)
 
     -- Hover efekti
