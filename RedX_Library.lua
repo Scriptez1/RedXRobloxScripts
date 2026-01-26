@@ -594,7 +594,7 @@ end
 
 local ui = RedX.new("RedX Hub : Blox Fruits")
 
-local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://")
+local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://7539983780")
 local mainMenuSec = ui:Section(mainMenu, "Main Menu")
 
 local farm = ui:CreatePage("Farm", "rbxassetid://")
