@@ -46,14 +46,13 @@ function RedX.new(title)
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.IgnoreGuiInset = true
 
-    -- Minimize için küçük ikon
+    -- Minimize için küçük ikon (DRAGGABLE FİX)
     local miniIcon = Instance.new("Frame", gui)
     miniIcon.Size = UDim2.new(0,60,0,60)
     miniIcon.Position = UDim2.new(0,20,0,20)
     miniIcon.BackgroundColor3 = theme.panel
     miniIcon.Visible = false
-    miniIcon.Active = true
-    miniIcon.Draggable = true
+    miniIcon.BorderSizePixel = 0
     corner(miniIcon,12)
     stroke(miniIcon)
 
@@ -71,6 +70,41 @@ function RedX.new(title)
     miniBtn.Size = UDim2.new(1,0,1,0)
     miniBtn.BackgroundTransparency = 1
     miniBtn.Text = ""
+    miniBtn.ZIndex = 2
+
+    -- Mini icon draggable yapma
+    local miniDragging = false
+    local miniDragInput, miniMousePos, miniFramePos
+
+    miniIcon.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            miniDragging = true
+            miniMousePos = input.Position
+            miniFramePos = miniIcon.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    miniDragging = false
+                end
+            end)
+        end
+    end)
+
+    miniIcon.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            miniDragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == miniDragInput and miniDragging then
+            local delta = input.Position - miniMousePos
+            miniIcon.Position = UDim2.new(
+                miniFramePos.X.Scale, miniFramePos.X.Offset + delta.X,
+                miniFramePos.Y.Scale, miniFramePos.Y.Offset + delta.Y
+            )
+        end
+    end)
 
     local main = Instance.new("Frame", gui)
     main.Size = UDim2.fromScale(0.75,0.8)
@@ -78,8 +112,54 @@ function RedX.new(title)
     main.BackgroundColor3 = theme.bg
     main.BorderSizePixel = 0
     main.ClipsDescendants = false
-    main.Active = true
+    main.Active = false
     corner(main,14)
+
+    -- Sidebar (ÖNCE OLUŞTUR)
+    local sidebar = Instance.new("Frame", main)
+    sidebar.Size = UDim2.new(0,200,1,0)
+    sidebar.Position = UDim2.new(0,0,0,0)
+    sidebar.BackgroundColor3 = theme.panel
+    sidebar.BorderSizePixel = 0
+    sidebar.ZIndex = 2
+    corner(sidebar,14)
+
+    local sidebarMask = Instance.new("Frame", sidebar)
+    sidebarMask.Size = UDim2.new(0,20,1,0)
+    sidebarMask.Position = UDim2.new(1,-20,0,0)
+    sidebarMask.BackgroundColor3 = theme.panel
+    sidebarMask.BorderSizePixel = 0
+    sidebarMask.ZIndex = 2
+
+    local sidebarPadding = Instance.new("UIPadding", sidebar)
+    sidebarPadding.PaddingTop = UDim.new(0,10)
+    sidebarPadding.PaddingLeft = UDim.new(0,8)
+    sidebarPadding.PaddingRight = UDim.new(0,8)
+    sidebarPadding.PaddingBottom = UDim.new(0,8)
+
+    local sidebarLayout = Instance.new("UIListLayout", sidebar)
+    sidebarLayout.Padding = UDim.new(0,8)
+    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
+
+    -- Sidebar logosu
+    local logoFrame = Instance.new("Frame", sidebar)
+    logoFrame.Size = UDim2.new(1,0,0,55)
+    logoFrame.BackgroundTransparency = 1
+    logoFrame.ZIndex = 5
+    logoFrame.LayoutOrder = -1
+
+    local logoText = Instance.new("TextLabel", logoFrame)
+    logoText.Text = "RedX"
+    logoText.Font = Enum.Font.GothamBold
+    logoText.TextSize = 20
+    logoText.TextColor3 = theme.accent
+    logoText.BackgroundTransparency = 1
+    logoText.Size = UDim2.new(1,0,1,0)
+    logoText.TextXAlignment = Enum.TextXAlignment.Center
+    logoText.TextYAlignment = Enum.TextYAlignment.Center
+    logoText.ZIndex = 5
 
     -- Header bar (DRAGGABLE OLACAK)
     local headerBar = Instance.new("Frame", main)
@@ -170,51 +250,6 @@ function RedX.new(title)
     corner(closeBtn,6)
     addHover(closeBtn, Color3.fromRGB(40,40,40), theme.accent)
 
-    local sidebar = Instance.new("Frame", main)
-    sidebar.Size = UDim2.new(0,200,1,0)
-    sidebar.Position = UDim2.new(0,0,0,0)
-    sidebar.BackgroundColor3 = theme.panel
-    sidebar.BorderSizePixel = 0
-    sidebar.ZIndex = 2
-    corner(sidebar,14)
-
-    local sidebarMask = Instance.new("Frame", sidebar)
-    sidebarMask.Size = UDim2.new(0,20,1,0)
-    sidebarMask.Position = UDim2.new(1,-20,0,0)
-    sidebarMask.BackgroundColor3 = theme.panel
-    sidebarMask.BorderSizePixel = 0
-    sidebarMask.ZIndex = 2
-
-    local sidebarPadding = Instance.new("UIPadding", sidebar)
-    sidebarPadding.PaddingTop = UDim.new(0,10)
-    sidebarPadding.PaddingLeft = UDim.new(0,8)
-    sidebarPadding.PaddingRight = UDim.new(0,8)
-    sidebarPadding.PaddingBottom = UDim.new(0,8)
-
-    local sidebarLayout = Instance.new("UIListLayout", sidebar)
-    sidebarLayout.Padding = UDim.new(0,8)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
-
-    -- Sidebar logosu
-    local logoFrame = Instance.new("Frame", sidebar)
-    logoFrame.Size = UDim2.new(1,0,0,55)
-    logoFrame.BackgroundTransparency = 1
-    logoFrame.ZIndex = 5
-    logoFrame.LayoutOrder = -1
-
-    local logoText = Instance.new("TextLabel", logoFrame)
-    logoText.Text = "RedX"
-    logoText.Font = Enum.Font.GothamBold
-    logoText.TextSize = 20
-    logoText.TextColor3 = theme.accent
-    logoText.BackgroundTransparency = 1
-    logoText.Size = UDim2.new(1,0,1,0)
-    logoText.TextXAlignment = Enum.TextXAlignment.Center
-    logoText.TextYAlignment = Enum.TextYAlignment.Center
-    logoText.ZIndex = 5
-
     -- Minimize functionality
     local isMinimized = false
     minimizeBtn.MouseButton1Click:Connect(function()
@@ -242,32 +277,43 @@ function RedX.new(title)
         isMinimized = false
     end)
 
-    -- Close functionality (TÜM ELEMANLAR AYNI ANDA KAPANIR)
+    -- Close functionality (DÜZELTİLDİ - TextTransparency hatası giderildi)
     closeBtn.MouseButton1Click:Connect(function()
-        -- Tüm elemanları aynı anda animate et
-        local tweens = {}
-        
-        for _, child in pairs(main:GetDescendants()) do
-            if child:IsA("GuiObject") and child ~= main then
-                table.insert(tweens, TweenService:Create(child, TweenInfo.new(0.2), {
-                    BackgroundTransparency = 1,
-                    TextTransparency = 1
-                }))
-            end
-        end
-        
-        table.insert(tweens, TweenService:Create(main, TweenInfo.new(0.2), {
+        -- Ana frame animasyonu
+        TweenService:Create(main, TweenInfo.new(0.2), {
             BackgroundTransparency = 1,
             Size = UDim2.new(0,0,0,0),
             Position = UDim2.new(0,20,0,20)
-        }))
+        }):Play()
         
-        -- Tüm animasyonları başlat
-        for _, tween in pairs(tweens) do
-            tween:Play()
+        -- Tüm alt elemanları fade out yap
+        for _, child in pairs(main:GetDescendants()) do
+            if child:IsA("GuiObject") then
+                pcall(function()
+                    TweenService:Create(child, TweenInfo.new(0.2), {
+                        BackgroundTransparency = 1
+                    }):Play()
+                end)
+                
+                if child:IsA("TextLabel") or child:IsA("TextButton") then
+                    pcall(function()
+                        TweenService:Create(child, TweenInfo.new(0.2), {
+                            TextTransparency = 1
+                        }):Play()
+                    end)
+                end
+                
+                if child:IsA("ImageLabel") then
+                    pcall(function()
+                        TweenService:Create(child, TweenInfo.new(0.2), {
+                            ImageTransparency = 1
+                        }):Play()
+                    end)
+                end
+            end
         end
         
-        task.wait(0.2)
+        task.wait(0.25)
         gui:Destroy()
     end)
 
@@ -327,6 +373,7 @@ function RedX:CreatePage(name, iconUrl)
     page.Visible = false
     page.BackgroundTransparency = 1
     page.BorderSizePixel = 0
+    page.ZIndex = 1
 
     local pagePadding = Instance.new("UIPadding", page)
     pagePadding.PaddingTop = UDim.new(0,10)
