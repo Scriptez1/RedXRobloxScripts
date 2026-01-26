@@ -271,8 +271,6 @@ function RedX:CreatePage(name, iconUrl)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
-    btn.Visible = true
-    btn.LayoutOrder = #self.Pages + 1
     corner(btn,8)
 
     -- Hover efekti
