@@ -452,18 +452,11 @@ end
 
 function RedX:Section(page, title)
     local card = Instance.new("Frame", page)
-    card.Size = UDim2.new(1,0,0,70)
+    card.Size = UDim2.new(1,0,0,40)
     card.BackgroundColor3 = theme.card
     card.BorderSizePixel = 0
     corner(card,10)
     stroke(card)
-
-    local innerShadow = Instance.new("Frame", card)
-    innerShadow.Size = UDim2.new(1,0,0,1)
-    innerShadow.Position = UDim2.new(0,0,0,0)
-    innerShadow.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    innerShadow.BackgroundTransparency = 0.97
-    innerShadow.BorderSizePixel = 0
 
     local label = Instance.new("TextLabel", card)
     label.Text = title
@@ -477,8 +470,16 @@ function RedX:Section(page, title)
 
     local holder = Instance.new("Frame", card)
     holder.Position = UDim2.new(0,10,0,32)
-    holder.Size = UDim2.new(1,-20,0,30)
+    holder.Size = UDim2.new(1,-20,0,0)
     holder.BackgroundTransparency = 1
+
+    local layout = Instance.new("UIListLayout", holder)
+    layout.Padding = UDim.new(0,6)
+
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        holder.Size = UDim2.new(1,-20,0,layout.AbsoluteContentSize.Y)
+        card.Size = UDim2.new(1,0,0,layout.AbsoluteContentSize.Y + 42)
+    end)
 
     return holder
 end
