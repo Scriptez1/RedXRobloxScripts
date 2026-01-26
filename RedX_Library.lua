@@ -240,7 +240,7 @@ function RedX.new(title)
 
     local rightButtons = Instance.new("Frame", headerBar)
     rightButtons.Size = UDim2.new(0,90,1,0)
-    rightButtons.Position = UDim2.new(1,-300,0,0)
+    rightButtons.Position = UDim2.new(1,-50,0,0)
     rightButtons.BackgroundTransparency = 1
     
     local rightLayout = Instance.new("UIListLayout", rightButtons)
