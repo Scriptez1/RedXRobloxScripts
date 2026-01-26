@@ -588,39 +588,29 @@ function RedX:Toggle(parent, text, callback)
     end)
 end
 
--- AUTO LOAD DEMO
 local ui = RedX.new("RedX Hub : Blox Fruits")
-local farm = ui:CreatePage("Farm", "rbxassetid://7733674079")
+
+local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://6031071053")
+local mainMenuSec = ui:Section(mainMenu, "Main Menu")
+local farm = ui:CreatePage("Farm", "rbxassetid://6031280882")
 local farmSec = ui:Section(farm, "Farm")
-ui:Toggle(farmSec, "Auto Farm Level", function(v) 
-    print("Auto Farm:", v and "Açık" or "Kapalı")
-end)
-
-local quests = ui:CreatePage("Quests/Items", "rbxassetid://7733715400")
+local quests = ui:CreatePage("Quests/Items", "rbxassetid://6031763426")
 local questsSec = ui:Section(quests, "Quests/Items")
-
-local fruit = ui:CreatePage("Fruit", "rbxassetid://7733992294")
+local fruit = ui:CreatePage("Fruit", "rbxassetid://6031094678")
 local fruitSec = ui:Section(fruit, "Fruit")
-
-local raid = ui:CreatePage("Raid", "rbxassetid://7733749833")
+local raid = ui:CreatePage("Raid", "rbxassetid://6031233858")
 local raidSec = ui:Section(raid, "Raid")
-
-local stats = ui:CreatePage("Stats", "rbxassetid://7733774602")
+local stats = ui:CreatePage("Stats", "rbxassetid://6031260786")
 local statsSec = ui:Section(stats, "Stats")
-
-local teleport = ui:CreatePage("Teleport", "rbxassetid://7733911828")
+local teleport = ui:CreatePage("Teleport", "rbxassetid://6031302930")
 local teleportSec = ui:Section(teleport, "Teleport")
-
-local status = ui:CreatePage("Status", "rbxassetid://7733876142")
+local status = ui:CreatePage("Status", "rbxassetid://6031154871")
 local statusSec = ui:Section(status, "Status")
-
-local visual = ui:CreatePage("Visual", "rbxassetid://7733960981")
+local visual = ui:CreatePage("Visual", "rbxassetid://6031289461")
 local visualSec = ui:Section(visual, "Visual")
-
-local shop = ui:CreatePage("Shop", "rbxassetid://7733930644")
+local shop = ui:CreatePage("Shop", "rbxassetid://6031315029")
 local shopSec = ui:Section(shop, "Shop")
-
-local misc = ui:CreatePage("Misc", "rbxassetid://7733892167")
+local misc = ui:CreatePage("Misc", "rbxassetid://6031327770")
 local miscSec = ui:Section(misc, "Misc")
 
 ui:Toggle(miscSec, "No Clip", function(v)
