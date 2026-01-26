@@ -615,7 +615,7 @@ local raidSec = ui:Section(raid, "Raid")
 local stats = ui:CreatePage("Stats", "rbxassetid://18463215851")
 local statsSec = ui:Section(stats, "Stats")
 
-local teleport = ui:CreatePage("Teleport", "rbxassetid://6723742959")
+local teleport = ui:CreatePage("Teleport", "rbxassetid://6723742952")
 local teleportSec = ui:Section(teleport, "Teleport")
 
 local status = ui:CreatePage("Status", "rbxassetid://7743871002")
@@ -629,33 +629,6 @@ local shopSec = ui:Section(shop, "Shop")
 
 local misc = ui:CreatePage("Misc", "rbxassetid://6031280882")
 local miscSec = ui:Section(misc, "Misc")
-
-ui:Toggle(miscSec, "No Clip", function(v)
-    if v then
-        _G.noClip = true
-        while _G.noClip do
-            local plr = game.Players.LocalPlayer
-            if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                for _, part in pairs(plr.Character:GetDescendants()) do
-                    if part:IsA("BasePart") and part.CanCollide then
-                        part.CanCollide = false
-                    end
-                end
-            end
-            task.wait(0.1)
-        end
-    else
-        _G.noClip = false
-        local plr = game.Players.LocalPlayer
-        if plr.Character then
-            for _, part in pairs(plr.Character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = true
-                end
-            end
-        end
-    end
-end)
 
 ui:Toggle(miscSec, "Speed Hack", function(v)
     if v then
