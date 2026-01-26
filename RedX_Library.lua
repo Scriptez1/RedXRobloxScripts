@@ -52,6 +52,7 @@ function RedX.new(title)
     main.Position = UDim2.fromScale(0.125,0.1)
     main.BackgroundColor3 = theme.bg
     main.BorderSizePixel = 0
+    main.ClipsDescendants = true
     corner(main,14)
 
     local sidebar = Instance.new("Frame", main)
@@ -64,8 +65,8 @@ function RedX.new(title)
 
     -- Sidebar için sağ kenar (köşeleri düzelt)
     local sidebarMask = Instance.new("Frame", sidebar)
-    sidebarMask.Size = UDim2.new(0,14,1,0)
-    sidebarMask.Position = UDim2.new(1,-14,0,0)
+    sidebarMask.Size = UDim2.new(0,20,1,0)
+    sidebarMask.Position = UDim2.new(1,-20,0,0)
     sidebarMask.BackgroundColor3 = theme.panel
     sidebarMask.BorderSizePixel = 0
     sidebarMask.ZIndex = 2
@@ -180,10 +181,11 @@ end
 
 function RedX:CreatePage(name, iconUrl)
     local btn = Instance.new("TextButton", self.Sidebar)
-    btn.Size = UDim2.new(1,0,0,40)
+    btn.Size = UDim2.new(1,-16,0,40)
     btn.BackgroundColor3 = Color3.fromRGB(28,28,28)
     btn.Text = ""
     btn.BorderSizePixel = 0
+    btn.AutoButtonColor = false
     corner(btn,8)
 
     -- Hover efekti
@@ -205,10 +207,10 @@ function RedX:CreatePage(name, iconUrl)
     txt.Size = UDim2.new(1,-45,1,0)
     txt.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Seçili gösterge
+    -- Seçili gösterge (sol kırmızı çubuk)
     local indicator = Instance.new("Frame", btn)
-    indicator.Size = UDim2.new(0,3,0,20)
-    indicator.Position = UDim2.new(0,0,0.5,-10)
+    indicator.Size = UDim2.new(0,3,0,24)
+    indicator.Position = UDim2.new(0,-8,0.5,-12)
     indicator.BackgroundColor3 = theme.accent
     indicator.BorderSizePixel = 0
     indicator.Visible = false
@@ -241,19 +243,26 @@ function RedX:CreatePage(name, iconUrl)
         for _,p in pairs(self.Pages) do
             p.Visible = false
         end
-        -- Tüm butonların indicator'larını gizle
+        -- Tüm butonları normale döndür
         for _,child in pairs(self.Sidebar:GetChildren()) do
             if child:IsA("TextButton") then
                 local ind = child:FindFirstChild("Frame")
                 if ind then ind.Visible = false end
+                TweenService:Create(child, TweenInfo.new(0.15), {
+                    BackgroundColor3 = Color3.fromRGB(28,28,28)
+                }):Play()
             end
         end
+        -- Seçili olanı vurgula
         indicator.Visible = true
+        TweenService:Create(btn, TweenInfo.new(0.15), {
+            BackgroundColor3 = Color3.fromRGB(35,35,35)
+        }):Play()
         page.Visible = true
         self.CurrentPage = page
         
         -- Smooth geçiş
-        page.ScrollingFrame.CanvasPosition = Vector2.new(0,0)
+        page.CanvasPosition = Vector2.new(0,0)
     end)
 
     table.insert(self.Pages,page)
@@ -262,8 +271,9 @@ end
 
 function RedX:Section(page, title)
     local card = Instance.new("Frame", page)
-    card.Size = UDim2.new(1,0,0,70)
+    card.Size = UDim2.new(1,-10,0,70)
     card.BackgroundColor3 = theme.card
+    card.BorderSizePixel = 0
     corner(card,10)
     stroke(card)
 
