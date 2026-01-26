@@ -594,34 +594,37 @@ end
 
 local ui = RedX.new("RedX Hub : Blox Fruits")
 
-local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://13060262582")
+local mainMenu = ui:CreatePage("Main Menu", "rbxassetid://")
 local mainMenuSec = ui:Section(mainMenu, "Main Menu")
 
-local farm = ui:CreatePage("Farm", "rbxassetid://7733986726")
+local farm = ui:CreatePage("Farm", "rbxassetid://")
 local farmSec = ui:Section(farm, "Farm")
 
-local quests = ui:CreatePage("Quests/Items", "rbxassetid://7485051733")
+local quests = ui:CreatePage("Quests/Items", "rbxassetid://")
 local questsSec = ui:Section(quests, "Quests/Items")
 
-local fruit = ui:CreatePage("Fruit", "rbxassetid://13492316294")
+local sea = ui:CreatePage("Sea", "rbxassetid://6035078916")
+local seaSec = ui:Section(sea, "Sea")
+
+local fruit = ui:CreatePage("Fruit", "rbxassetid://")
 local fruitSec = ui:Section(fruit, "Fruit")
 
-local raid = ui:CreatePage("Raid", "rbxassetid://3079644018")
+local raid = ui:CreatePage("Raid", "rbxassetid://")
 local raidSec = ui:Section(raid, "Raid")
 
-local stats = ui:CreatePage("Stats", "rbxassetid://18463215851")
+local stats = ui:CreatePage("Stats", "rbxassetid://6034267999")
 local statsSec = ui:Section(stats, "Stats")
 
-local teleport = ui:CreatePage("Teleport", "rbxassetid://6723742959")
+local teleport = ui:CreatePage("Teleport", "rbxassetid://")
 local teleportSec = ui:Section(teleport, "Teleport")
 
-local status = ui:CreatePage("Status", "rbxassetid://124871982298256")
+local status = ui:CreatePage("Status", "rbxassetid://6034287605")
 local statusSec = ui:Section(status, "Status")
 
 local visual = ui:CreatePage("Visual", "rbxassetid://6031763426")
 local visualSec = ui:Section(visual, "Visual")
 
-local shop = ui:CreatePage("Shop", "rbxassetid://11385395257")
+local shop = ui:CreatePage("Shop", "rbxassetid://")
 local shopSec = ui:Section(shop, "Shop")
 
 local misc = ui:CreatePage("Misc", "rbxassetid://6031280882")
