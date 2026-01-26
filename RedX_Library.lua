@@ -50,19 +50,8 @@ function RedX.new(title)
     main.Size = UDim2.fromScale(0.75,0.8)
     main.Position = UDim2.fromScale(0.125,0.1)
     main.BackgroundColor3 = theme.bg
-    main.ClipsDescendants = true
+    main.BorderSizePixel = 0
     corner(main,14)
-
-    -- Gölge efekti için
-    local shadow = Instance.new("ImageLabel", main)
-    shadow.Size = UDim2.new(1,30,1,30)
-    shadow.Position = UDim2.new(0,-15,0,-15)
-    shadow.BackgroundTransparency = 1
-    shadow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
-    shadow.ImageTransparency = 0.7
-    shadow.ScaleType = Enum.ScaleType.Slice
-    shadow.SliceCenter = Rect.new(10,10,118,118)
-    shadow.ZIndex = 0
 
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0,200,1,0)
@@ -213,13 +202,20 @@ function RedX:CreatePage(name, iconUrl)
     corner(indicator,2)
 
     local page = Instance.new("ScrollingFrame", self.Main)
-    page.Position = UDim2.new(0,220,0,60)
-    page.Size = UDim2.new(1,-240,1,-70)
+    page.Position = UDim2.new(0,210,0,60)
+    page.Size = UDim2.new(1,-220,1,-70)
     page.CanvasSize = UDim2.new(0,0,0,0)
     page.ScrollBarThickness = 4
     page.Visible = false
     page.BackgroundTransparency = 1
     page.BorderSizePixel = 0
+
+    -- Padding ekle
+    local pagePadding = Instance.new("UIPadding", page)
+    pagePadding.PaddingTop = UDim.new(0,10)
+    pagePadding.PaddingLeft = UDim.new(0,10)
+    pagePadding.PaddingRight = UDim.new(0,10)
+    pagePadding.PaddingBottom = UDim.new(0,10)
 
     local layout = Instance.new("UIListLayout", page)
     layout.Padding = UDim.new(0,10)
