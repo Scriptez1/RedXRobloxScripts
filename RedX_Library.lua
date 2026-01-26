@@ -218,8 +218,7 @@ function RedX.new(title)
         end
     end)
 
-    game:GetService("UserInputServicepad.PaddingRight = UDim.new(0,40)
-").InputChanged:Connect(function(input)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             local delta = input.Position - mousePos
             main.Position = UDim2.new(
@@ -228,6 +227,7 @@ function RedX.new(title)
             )
         end
     end)
+
 
     local header = Instance.new("TextLabel", headerBar)
     header.Text = title
