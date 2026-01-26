@@ -612,7 +612,7 @@ local fruitSec = ui:Section(fruit, "Fruit")
 local raid = ui:CreatePage("Raid", "rbxassetid://7734056608")
 local raidSec = ui:Section(raid, "Raid")
 
-local stats = ui:CreatePage("Stats", "rbxassetid://18463215851")
+local stats = ui:CreatePage("Stats", "rbxassetid://18351727024")
 local statsSec = ui:Section(stats, "Stats")
 
 local teleport = ui:CreatePage("Teleport", "rbxassetid://6723742952")
