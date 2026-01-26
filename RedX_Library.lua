@@ -122,7 +122,7 @@ function RedX.new(title)
     sidebar.BackgroundColor3 = theme.panel
     sidebar.BorderSizePixel = 0
     sidebar.ZIndex = 2
-    sidebar.ClipsDescendants = true  -- ÖNEMLİ: Taşmaları önler
+    sidebar.ClipsDescendants = false
     corner(sidebar,14)
 
     local sidebarMask = Instance.new("Frame", sidebar)
@@ -132,13 +132,12 @@ function RedX.new(title)
     sidebarMask.BorderSizePixel = 0
     sidebarMask.ZIndex = 2
 
-    -- Sidebar logosu (ListLayout'tan ÖNCE eklenmeli)
+    -- Sidebar logosu (Absolute position - UIListLayout etkilemeyecek)
     local logoFrame = Instance.new("Frame", sidebar)
     logoFrame.Size = UDim2.new(1,0,0,65)
-    logoFrame.Position = UDim2.new(0,0,0,0)  -- Manuel pozisyon
+    logoFrame.Position = UDim2.new(0,0,0,0)
     logoFrame.BackgroundTransparency = 1
     logoFrame.ZIndex = 5
-    logoFrame.LayoutOrder = -1000  -- En üstte olması için
 
     local logoText = Instance.new("TextLabel", logoFrame)
     logoText.Text = "RedX"
@@ -151,18 +150,30 @@ function RedX.new(title)
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
 
-    -- UIListLayout direkt sidebar'a eklenecek
-    local sidebarPadding = Instance.new("UIPadding", sidebar)
-    sidebarPadding.PaddingTop = UDim.new(0,10)
-    sidebarPadding.PaddingLeft = UDim.new(0,8)
-    sidebarPadding.PaddingRight = UDim.new(0,8)
-    sidebarPadding.PaddingBottom = UDim.new(0,8)
+    -- ScrollingFrame için butonlar (Logo'nun altında)
+    local buttonsScroll = Instance.new("ScrollingFrame", sidebar)
+    buttonsScroll.Size = UDim2.new(1,0,1,-75)
+    buttonsScroll.Position = UDim2.new(0,0,0,75)
+    buttonsScroll.BackgroundTransparency = 1
+    buttonsScroll.BorderSizePixel = 0
+    buttonsScroll.ScrollBarThickness = 0
+    buttonsScroll.CanvasSize = UDim2.new(0,0,0,0)
+    buttonsScroll.ZIndex = 3
 
-    local sidebarLayout = Instance.new("UIListLayout", sidebar)
-    sidebarLayout.Padding = UDim.new(0,8)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    sidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    sidebarLayout.FillDirection = Enum.FillDirection.Vertical
+    local buttonsPadding = Instance.new("UIPadding", buttonsScroll)
+    buttonsPadding.PaddingLeft = UDim.new(0,8)
+    buttonsPadding.PaddingRight = UDim.new(0,8)
+    buttonsPadding.PaddingTop = UDim.new(0,0)
+    buttonsPadding.PaddingBottom = UDim.new(0,8)
+
+    local buttonsLayout = Instance.new("UIListLayout", buttonsScroll)
+    buttonsLayout.Padding = UDim.new(0,8)
+    buttonsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    buttonsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+    buttonsLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        buttonsScroll.CanvasSize = UDim2.new(0,0,0,buttonsLayout.AbsoluteContentSize.Y + 8)
+    end)
 
     -- Header bar
     local headerBar = Instance.new("Frame", main)
@@ -319,7 +330,7 @@ function RedX.new(title)
     end)
 
     self.Main = main
-    self.Sidebar = sidebar
+    self.ButtonsScroll = buttonsScroll
     self.HeaderBar = headerBar
     self.Pages = {}
     self.CurrentPage = nil
@@ -328,13 +339,13 @@ function RedX.new(title)
 end
 
 function RedX:CreatePage(name, iconUrl)
-    local btn = Instance.new("TextButton", self.Sidebar)
+    local btn = Instance.new("TextButton", self.ButtonsScroll)
     btn.Size = UDim2.new(1,0,0,42)
     btn.BackgroundColor3 = Color3.fromRGB(32,32,32)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
-    btn.ZIndex = 3
+    btn.ZIndex = 4
     corner(btn,8)
 
     addHover(btn, Color3.fromRGB(32,32,32), Color3.fromRGB(38,38,38))
@@ -344,7 +355,7 @@ function RedX:CreatePage(name, iconUrl)
     icon.Position = UDim2.new(0,10,0.5,-11)
     icon.BackgroundTransparency = 1
     icon.Image = iconUrl or ""
-    icon.ZIndex = 4
+    icon.ZIndex = 5
 
     local txt = Instance.new("TextLabel", btn)
     txt.Text = name
@@ -355,7 +366,7 @@ function RedX:CreatePage(name, iconUrl)
     txt.Position = UDim2.new(0,40,0,0)
     txt.Size = UDim2.new(1,-45,1,0)
     txt.TextXAlignment = Enum.TextXAlignment.Left
-    txt.ZIndex = 4
+    txt.ZIndex = 5
 
     local indicator = Instance.new("Frame", btn)
     indicator.Size = UDim2.new(0,3,0,24)
@@ -363,7 +374,7 @@ function RedX:CreatePage(name, iconUrl)
     indicator.BackgroundColor3 = theme.accent
     indicator.BorderSizePixel = 0
     indicator.Visible = false
-    indicator.ZIndex = 4
+    indicator.ZIndex = 5
     corner(indicator,2)
 
     local page = Instance.new("ScrollingFrame", self.Main)
@@ -394,7 +405,7 @@ function RedX:CreatePage(name, iconUrl)
             p.Visible = false
         end
         
-        for _,child in pairs(self.Sidebar:GetChildren()) do
+        for _,child in pairs(self.ButtonsScroll:GetChildren()) do
             if child:IsA("TextButton") then
                 local ind = child:FindFirstChild("Frame")
                 if ind then ind.Visible = false end
