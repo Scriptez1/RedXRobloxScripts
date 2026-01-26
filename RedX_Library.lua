@@ -12,7 +12,7 @@ local theme = {
     sub = Color3.fromRGB(160,160,160),
     accent = Color3.fromRGB(220,20,60),
     bgTransparency = 1,
-    panelTransparency = 0.2
+    panelTransparency = 1
 }
 
 local function corner(o,r)
