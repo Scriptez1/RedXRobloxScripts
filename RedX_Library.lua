@@ -73,7 +73,7 @@ function RedX.new(title)
 
     -- Sidebar için padding
     local sidebarPadding = Instance.new("UIPadding", sidebar)
-    sidebarPadding.PaddingTop = UDim.new(0,60)
+    sidebarPadding.PaddingTop = UDim.new(0,10)
     sidebarPadding.PaddingLeft = UDim.new(0,8)
     sidebarPadding.PaddingRight = UDim.new(0,8)
     sidebarPadding.PaddingBottom = UDim.new(0,8)
@@ -90,6 +90,11 @@ function RedX.new(title)
     headerBar.BackgroundColor3 = theme.bg
     headerBar.BorderSizePixel = 0
     headerBar.ZIndex = 2
+    headerBar.ClipsDescendants = true
+    
+    -- Sağ üst köşe
+    local headerCorner = Instance.new("UICorner", headerBar)
+    headerCorner.CornerRadius = UDim.new(0,14)
 
     -- Alt çizgi
     local headerLine = Instance.new("Frame", headerBar)
@@ -154,7 +159,7 @@ function RedX.new(title)
 
     -- Sidebar logosunu ekle (üst kısım)
     local logoFrame = Instance.new("Frame", sidebar)
-    logoFrame.Size = UDim2.new(1,0,0,50)
+    logoFrame.Size = UDim2.new(1,0,0,55)
     logoFrame.Position = UDim2.new(0,0,0,0)
     logoFrame.BackgroundTransparency = 1
     logoFrame.ZIndex = 5
@@ -163,11 +168,12 @@ function RedX.new(title)
     local logoText = Instance.new("TextLabel", logoFrame)
     logoText.Text = "RedX"
     logoText.Font = Enum.Font.GothamBold
-    logoText.TextSize = 18
+    logoText.TextSize = 20
     logoText.TextColor3 = theme.accent
     logoText.BackgroundTransparency = 1
     logoText.Size = UDim2.new(1,0,1,0)
     logoText.TextXAlignment = Enum.TextXAlignment.Center
+    logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 5
 
     self.Main = main
@@ -181,15 +187,15 @@ end
 
 function RedX:CreatePage(name, iconUrl)
     local btn = Instance.new("TextButton", self.Sidebar)
-    btn.Size = UDim2.new(1,-16,0,40)
-    btn.BackgroundColor3 = Color3.fromRGB(28,28,28)
+    btn.Size = UDim2.new(1,-16,0,42)
+    btn.BackgroundColor3 = Color3.fromRGB(32,32,32)
     btn.Text = ""
     btn.BorderSizePixel = 0
     btn.AutoButtonColor = false
     corner(btn,8)
 
     -- Hover efekti
-    addHover(btn, Color3.fromRGB(28,28,28), Color3.fromRGB(35,35,35))
+    addHover(btn, Color3.fromRGB(32,32,32), Color3.fromRGB(38,38,38))
 
     local icon = Instance.new("ImageLabel", btn)
     icon.Size = UDim2.new(0,22,0,22)
@@ -249,14 +255,14 @@ function RedX:CreatePage(name, iconUrl)
                 local ind = child:FindFirstChild("Frame")
                 if ind then ind.Visible = false end
                 TweenService:Create(child, TweenInfo.new(0.15), {
-                    BackgroundColor3 = Color3.fromRGB(28,28,28)
+                    BackgroundColor3 = Color3.fromRGB(32,32,32)
                 }):Play()
             end
         end
         -- Seçili olanı vurgula
         indicator.Visible = true
         TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(35,35,35)
+            BackgroundColor3 = Color3.fromRGB(40,40,40)
         }):Play()
         page.Visible = true
         self.CurrentPage = page
@@ -266,6 +272,15 @@ function RedX:CreatePage(name, iconUrl)
     end)
 
     table.insert(self.Pages,page)
+    
+    -- İlk sayfa otomatik seçili olsun
+    if #self.Pages == 1 then
+        page.Visible = true
+        indicator.Visible = true
+        btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+        self.CurrentPage = page
+    end
+    
     return page
 end
 
