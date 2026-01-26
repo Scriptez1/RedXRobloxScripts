@@ -241,7 +241,7 @@ function RedX.new(title)
     -- Minimize button
     local minimizeBtn = Instance.new("TextButton", headerBar)
     minimizeBtn.Size = UDim2.new(0,32,0,32)
-    minimizeBtn.Position = UDim2.new(1,-122,0.5,-16)
+    minimizeBtn.Position = UDim2.new(1,-202,0.5,-16)
     minimizeBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
     minimizeBtn.Text = "−"
     minimizeBtn.Font = Enum.Font.GothamBold
