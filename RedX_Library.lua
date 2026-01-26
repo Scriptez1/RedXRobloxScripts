@@ -501,4 +501,12 @@ function RedX:Toggle(parent, text, callback)
     end)
 end
 
+-- AUTO LOAD DEMO
+local ui = RedX.new("RedX Hub : Blox Fruits")
+local farm = ui:CreatePage("Farm", "rbxassetid://7733674079")
+local farmSec = ui:Section(farm, "Farm")
+ui:Toggle(farmSec, "Auto Farm Level", function(v) 
+    print("Auto Farm:", v and "Açık" or "Kapalı")
+end)
+
 return RedX
