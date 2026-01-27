@@ -74,7 +74,8 @@ local other = {"[^_%s%w=>~<%-%+%*]", ">", "~", "<", "%-", "%+", "=", "%*"}
 local offLimits = {}
 
 --- Determines if index is in a string
-function isOffLimits(index)
+local isOffLimits
+isOffLimits = function(index)
     for _, v in pairs(offLimits) do
         if index >= v[1] and index <= v[2] then
             return true
@@ -98,7 +99,8 @@ end
 -- end
 
 --- Find iterator
-function gfind(str, pattern)
+local gfind
+gfind = function(str, pattern)
     return coroutine.wrap(function()
         local start = 0
         while true do
@@ -114,7 +116,8 @@ function gfind(str, pattern)
 end
 
 --- Finds and highlights comments with `commentColor`
-function renderComments()
+local renderComments
+renderComments = function()
     local str = Highlight:getRaw()
     local step = 1
     for _, pattern in pairs(comments) do
@@ -136,7 +139,8 @@ function renderComments()
 end
 
 -- Finds and highlights strings with `stringColor`
-function renderStrings()
+local renderStrings
+renderStrings = function()
     local stringType
     local stringEndType
     local ignoreBackslashes
@@ -180,7 +184,8 @@ end
 --- Highlights the specified patterns with the specified color
 --- @param patternArray string[]
 ---@param color userdata
-function highlightPattern(patternArray, color)
+local highlightPattern
+highlightPattern = function(patternArray, color)
     local str = Highlight:getRaw()
     local step = 1
     for _, pattern in pairs(patternArray) do
@@ -202,7 +207,8 @@ end
 
 --- Automatically replaces reserved chars with escape chars
 --- @param s string
-function autoEscape(s)
+local autoEscape
+autoEscape = function(s)
     for i = 0, #s do
         local char = string.sub(s, i, i)
         if char == "<" then
@@ -231,7 +237,8 @@ function autoEscape(s)
 end
 
 --- Main function for syntax highlighting tableContents
-function render()
+local render
+render = function()
     offLimits = {}
     lines = {}
     textFrame:ClearAllChildren()
@@ -357,17 +364,20 @@ function render()
     updateCanvasSize()
 end
 
-function onFrameSizeChange()
+local onFrameSizeChange
+onFrameSizeChange = function()
     local newSize = parentFrame.AbsoluteSize
     scrollingFrame.Size = UDim2.new(0, newSize.X, 0, newSize.Y)
 end
 
-function updateCanvasSize()
+local updateCanvasSize
+updateCanvasSize = function()
     -- local codeSize = Vector2.new(TextService:GetTextSize(Highlight:getRaw(), textSize, font, Vector2.new(math.huge, math.huge)).X + 60, #lines * lineSpace + 60)
     scrollingFrame.CanvasSize = UDim2.new(0, largestX, 0, line * lineSpace)
 end
 
-function updateZIndex()
+local updateZIndex
+updateZIndex = function()
     for _, v in pairs(parentFrame:GetDescendants()) do
         if v:IsA("GuiObject") then
             v.ZIndex = parentFrame.ZIndex
