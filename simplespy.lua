@@ -2395,14 +2395,17 @@ function handlespecials(value, indentation)
 end
 
 -- safe (ish) tostring
-function safetostring(v: any)
+function safetostring(v)
 	if typeof(v) == "userdata" or type(v) == "table" then
 		local mt = getrawmetatable(v)
 		local badtostring = mt and rawget(mt, "__tostring")
 		if mt and badtostring then
+			local readonly = isreadonly(mt)
+			setreadonly(mt, false)
 			rawset(mt, "__tostring", nil)
 			local out = tostring(v)
 			rawset(mt, "__tostring", badtostring)
+			setreadonly(mt, readonly)
 			return out
 		end
 	end
@@ -2796,6 +2799,7 @@ if not _G.SimpleSpyExecuted then
 			or not getrawmetatable
 			or getrawmetatable and not getrawmetatable(game).__namecall
 			or not setreadonly
+			or not getnilinstances
 		then
 			local missing = {}
 			if not hookfunction then
@@ -2809,6 +2813,9 @@ if not _G.SimpleSpyExecuted then
 			end
 			if not setreadonly then
 				table.insert(missing, "setreadonly")
+			end
+			if not getnilinstances then
+				table.insert(missing, "getnilinstances")
 			end
 			shutdown()
 			error(
@@ -2862,8 +2869,7 @@ if not _G.SimpleSpyExecuted then
 			pcall(syn.protect_gui, SimpleSpy2)
 		end
 		bringBackOnResize()
-		SimpleSpy2.Parent = --[[gethui and gethui() or]]
-			CoreGui
+		SimpleSpy2.Parent = gethui and gethui() or CoreGui
 		_G.SimpleSpyExecuted = true
 		if not Players.LocalPlayer then
 			Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
