@@ -344,7 +344,14 @@ function RedX.new(title)
     self.ButtonsScroll = buttonsScroll
     self.HeaderBar = headerBar
     self.Pages = {}
+    self.Dropdowns = {} -- Kayıtlı dropdownlar
     self.CurrentPage = nil
+
+    function self:CloseAllDropdowns()
+        for _,dd in pairs(self.Dropdowns) do
+            dd.Close()
+        end
+    end
 
     return self
 end
@@ -420,10 +427,12 @@ function RedX:CreatePage(name, iconUrl)
     end)
 
     btn.MouseButton1Click:Connect(function()
+        self:CloseAllDropdowns() -- Sayfa değişince hepsini kapat
+
         for _,p in pairs(self.Pages) do
             p.Visible = false
         end
-        
+
         for _,child in pairs(self.ButtonsScroll:GetChildren()) do
             if child:IsA("TextButton") then
                 local ind = child:FindFirstChild("Frame")
@@ -457,42 +466,77 @@ end
 
 function RedX:Dropdown(parent, text, options, default, callback)
     local row = Instance.new("Frame", parent)
-    row.Size = UDim2.new(1,0,0,60)
+    row.Size = UDim2.new(1,0,0,65)
     row.BackgroundTransparency = 1
 
     local label = Instance.new("TextLabel", row)
     label.Size = UDim2.new(1,0,0,20)
     label.BackgroundTransparency = 1
     label.Text = text
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 13
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 12
     label.TextColor3 = theme.sub
     label.TextXAlignment = Enum.TextXAlignment.Left
 
     local btn = Instance.new("TextButton", row)
     btn.Position = UDim2.new(0,0,0,24)
-    btn.Size = UDim2.new(1,0,0,32)
-    btn.BackgroundColor3 = Color3.fromRGB(45,45,45)
-    btn.Text = "  " .. (default or "Select...")
+    btn.Size = UDim2.new(1,0,0,36)
+    btn.BackgroundColor3 = Color3.fromRGB(35,35,35)
+    btn.Text = "  " .. (default or "Select Option")
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 13
     btn.TextColor3 = theme.text
     btn.TextXAlignment = Enum.TextXAlignment.Left
-    corner(btn,6)
-    stroke(btn)
+    btn.AutoButtonColor = false
+    corner(btn,8)
+    local btnStroke = Instance.new("UIStroke", btn)
+    btnStroke.Color = theme.stroke
+    btnStroke.Thickness = 1
+    btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-    local list = Instance.new("ScrollingFrame", self.Gui) -- ScreenGui üzerine koyalım ki kesilmesin
+    local arrow = Instance.new("TextLabel", btn)
+    arrow.Size = UDim2.new(0,30,1,0)
+    arrow.Position = UDim2.new(1,-30,0,0)
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "" -- Icon font or fallback
+    if label.Font ~= Enum.Font.GothamBold then arrow.Text = "▼" end
+    arrow.Text = "▼"
+    arrow.TextColor3 = theme.sub
+    arrow.TextSize = 10
+
+    local list = Instance.new("ScrollingFrame", self.Gui)
     list.Size = UDim2.new(0, btn.AbsoluteSize.X, 0, 0)
-    list.BackgroundColor3 = Color3.fromRGB(35,35,35)
+    list.BackgroundColor3 = Color3.fromRGB(28,28,28)
     list.BorderSizePixel = 0
     list.Visible = false
-    list.ZIndex = 100
+    list.ZIndex = 1000
     list.ScrollBarThickness = 2
-    corner(list,6)
+    list.ScrollBarImageColor3 = theme.accent
+    list.ClipsDescendants = true
+    corner(list,8)
     stroke(list)
+    
+    local listPadding = Instance.new("UIPadding", list)
+    listPadding.PaddingTop = UDim.new(0,4)
+    listPadding.PaddingBottom = UDim.new(0,4)
+    listPadding.PaddingLeft = UDim.new(0,4)
+    listPadding.PaddingRight = UDim.new(0,4)
 
     local listLayout = Instance.new("UIListLayout", list)
-    listLayout.Padding = UDim.new(0,2)
+    listLayout.Padding = UDim.new(0,4)
+
+    local isOpen = false
+
+    local function closeDropdown()
+        isOpen = false
+        TweenService:Create(list, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(0, btn.AbsoluteSize.X, 0, 0)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.2), {Rotation = 0}):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.2), {Color = theme.stroke}):Play()
+        task.wait(0.2)
+        if not isOpen then list.Visible = false end
+    end
+
+    table.insert(self.Dropdowns, {Close = closeDropdown, List = list})
 
     local function updateList()
         for _,child in pairs(list:GetChildren()) do
@@ -500,35 +544,57 @@ function RedX:Dropdown(parent, text, options, default, callback)
         end
         for _,opt in pairs(options) do
             local oBtn = Instance.new("TextButton", list)
-            oBtn.Size = UDim2.new(1,0,0,28)
-            oBtn.BackgroundTransparency = 1
-            oBtn.Text = opt
+            oBtn.Size = UDim2.new(1,0,0,32)
+            oBtn.BackgroundColor3 = Color3.fromRGB(35,35,35)
+            oBtn.BorderSizePixel = 0
+            oBtn.Text = "   " .. opt
             oBtn.Font = Enum.Font.Gotham
-            oBtn.TextSize = 12
+            oBtn.TextSize = 13
             oBtn.TextColor3 = theme.text
-            oBtn.ZIndex = 101
+            oBtn.TextXAlignment = Enum.TextXAlignment.Left
+            oBtn.ZIndex = 1001
+            oBtn.AutoButtonColor = false
+            corner(oBtn,6)
+            
+            oBtn.MouseEnter:Connect(function()
+                TweenService:Create(oBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(45,45,45), TextColor3 = theme.accent}):Play()
+            end)
+            oBtn.MouseLeave:Connect(function()
+                TweenService:Create(oBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(35,35,35), TextColor3 = theme.text}):Play()
+            end)
 
             oBtn.MouseButton1Click:Connect(function()
                 btn.Text = "  " .. opt
-                list.Visible = false
+                closeDropdown()
                 if callback then callback(opt) end
             end)
         end
-        list.CanvasSize = UDim2.new(0,0,0, #options * 30)
+        list.CanvasSize = UDim2.new(0,0,0, #options * 36)
     end
 
     btn.MouseButton1Click:Connect(function()
-        list.Visible = not list.Visible
-        if list.Visible then
+        if isOpen then
+            closeDropdown()
+        else
+            -- Diğerlerini kapat
+            for _,dd in pairs(self.Dropdowns) do dd.Close() end
+            
+            isOpen = true
             updateList()
-            list.Position = UDim2.new(0, btn.AbsolutePosition.X, 0, btn.AbsolutePosition.Y + 35)
-            list.Size = UDim2.new(0, btn.AbsoluteSize.X, 0, math.min(#options * 30, 150))
+            list.Position = UDim2.new(0, btn.AbsolutePosition.X, 0, btn.AbsolutePosition.Y + 40)
+            list.Visible = true
+            TweenService:Create(list, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, btn.AbsoluteSize.X, 0, math.min(#options * 36 + 8, 220))
+            }):Play()
+            TweenService:Create(arrow, TweenInfo.new(0.3), {Rotation = 180}):Play()
+            TweenService:Create(btnStroke, TweenInfo.new(0.3), {Color = theme.accent}):Play()
         end
     end)
 
     return {
         SetValues = function(newOpts)
             options = newOpts
+            if isOpen then updateList() end
         end
     }
 end
