@@ -339,6 +339,7 @@ function RedX.new(title)
         gui:Destroy()
     end)
 
+    self.Gui = gui
     self.Main = main
     self.ButtonsScroll = buttonsScroll
     self.HeaderBar = headerBar
@@ -480,7 +481,7 @@ function RedX:Dropdown(parent, text, options, default, callback)
     corner(btn,6)
     stroke(btn)
 
-    local list = Instance.new("ScrollingFrame", parent.Parent.Parent) -- Main page scrolling frame'in üstüne koyalım
+    local list = Instance.new("ScrollingFrame", self.Gui) -- ScreenGui üzerine koyalım ki kesilmesin
     list.Size = UDim2.new(0, btn.AbsoluteSize.X, 0, 0)
     list.BackgroundColor3 = Color3.fromRGB(35,35,35)
     list.BorderSizePixel = 0
@@ -520,7 +521,7 @@ function RedX:Dropdown(parent, text, options, default, callback)
         list.Visible = not list.Visible
         if list.Visible then
             updateList()
-            list.Position = UDim2.new(0, btn.AbsolutePosition.X - parent.Parent.Parent.AbsolutePosition.X, 0, btn.AbsolutePosition.Y - parent.Parent.Parent.AbsolutePosition.Y + 35)
+            list.Position = UDim2.new(0, btn.AbsolutePosition.X, 0, btn.AbsolutePosition.Y + 35)
             list.Size = UDim2.new(0, btn.AbsoluteSize.X, 0, math.min(#options * 30, 150))
         end
     end)
@@ -667,6 +668,24 @@ function RedX:Toggle(parent, text, callback)
         }):Play()
         
         if callback then callback(on) end
+    end)
+end
+
+function RedX:Button(parent, text, callback)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(1,0,0,32)
+    btn.BackgroundColor3 = Color3.fromRGB(45,45,45)
+    btn.Text = text
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 13
+    btn.TextColor3 = theme.text
+    corner(btn,6)
+    stroke(btn)
+    
+    addHover(btn, Color3.fromRGB(45,45,45), Color3.fromRGB(55,55,55))
+    
+    btn.MouseButton1Click:Connect(function()
+        if callback then callback() end
     end)
 end
 
@@ -972,11 +991,11 @@ local function MaterialMon()
     end
 end
 
-ui:Dropdown(bossSec, "Select Boss", BossList, "None", function(v) _G.SelectBoss = v end)
-ui:Toggle(bossSec, "Auto Farm Boss", function(v) _G.AutoBoss = v end)
+ui:Dropdown(questsSec, "Select Boss", BossList, "None", function(v) _G.SelectBoss = v end)
+ui:Toggle(questsSec, "Auto Farm Boss", function(v) _G.AutoBoss = v end)
 
-ui:Dropdown(bossSec, "Select Material", MaterialList, "None", function(v) _G.SelectMaterial = v end)
-ui:Toggle(bossSec, "Auto Farm Material", function(v) _G.AutoMaterial = v end)
+ui:Dropdown(questsSec, "Select Material", MaterialList, "None", function(v) _G.SelectMaterial = v end)
+ui:Toggle(questsSec, "Auto Farm Material", function(v) _G.AutoMaterial = v end)
 
 -- ESP Functions
 local function CreateESP(part, text, color)
